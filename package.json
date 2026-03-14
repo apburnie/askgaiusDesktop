@@ -1,18 +1,25 @@
 {
   "name": "ask-gaius",
   "module": "index.ts",
-  "type": "module",
-  "private": true,
-"scripts": {
-"build": " bun build ./index.ts --compile --outfile dist/ask-gaius"
-},
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/alpinejs": "^3.13.11",
+    "@types/bun": "^1.3.10",
+    "vite": "^7.3.1",
+    "vite-plugin-singlefile": "^2.3.0"
+  },
+  "dependencies": {
+    "alpinejs": "^3.15.8",
+    "dompurify": "^3.3.1",
+    "marked": "^17.0.2"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
-  "dependencies": {
-    "@webui-dev/bun-webui": "^2.5.4"
-  }
+  "private": true,
+  "scripts": {
+    "build": " bun build ./index.ts --compile --outfile dist/ask-gaius",
+    "start": "bun build:ui && bun run index.ts",
+    "build:ui": "cd ui/dev && tsc && vite build --emptyOutDir"
+  },
+  "type": "module"
 }

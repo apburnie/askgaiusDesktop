@@ -1,7 +1,19 @@
 <html>
 
-<body>
+<body id="demo">
 Hello World
+<script>
+
+let value
+
+(fetch("/console-test")).then(resp => (resp.text())).then(text => {
+document.getElementById("demo").innerHTML = text;
+
+})
+
+console.log(value)
+
+</script>
 </body>
 
 </html>
