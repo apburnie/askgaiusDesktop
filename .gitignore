@@ -4,6 +4,9 @@ node_modules
 # AI Model File
 model/*
 
+# LLama CPP
+llama_cpp/*
+
 # output
 out
 dist

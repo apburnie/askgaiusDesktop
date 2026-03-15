@@ -1,4 +1,3 @@
-//@ts-ignore
 import app from "./app" 
 
 import Alpine from 'alpinejs'
