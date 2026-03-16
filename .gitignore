@@ -5,7 +5,7 @@ node_modules
 model/*
 
 # LLama CPP
-llama_cpp/*
+llama-cpp/*
 
 # output
 out
@@ -39,4 +39,3 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Finder (MacOS) folder config
 .DS_Store
-

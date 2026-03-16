@@ -1,19 +1,16 @@
-<html>
-
-<body id="demo">
-Hello World
-<script>
-
-let value
-
-(fetch("/console-test")).then(resp => (resp.text())).then(text => {
-document.getElementById("demo").innerHTML = text;
-
-})
-
-console.log(value)
-
-</script>
-</body>
-
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AskGaius User Portal</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body x-data="data">
+        <header>
+            <h1 x-text="headerText"></h1>
+        </header>
+        <main x-html="main" />
+        <script type="module" src="./main.ts" />
+    </body>
 </html>
