@@ -12,6 +12,8 @@ interface Data {
   main: string;
   func_s: Record<string, Function>;
   hist: HistType;
+  os: string;
+  hardware: string;
 }
 
 const main = `${Home()}${Converse()}`;
@@ -21,6 +23,8 @@ const data: () => Data = () => ({
   hist: [],
   headerText: "Welcome to Ask Gaius",
   prompt: "",
+  os: "UBUNTU",
+  hardware: "vulkan",
   main,
   func_s: {
     submitPrompt(data: Data) {
@@ -31,6 +35,15 @@ const data: () => Data = () => ({
 
       hist.push({ step: a_step, role: "assistant", content: "hello" });
       data.prompt = "";
+    },
+    async startServer(data: Data) {
+      await fetch("/start-server", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ os: data.os, hardware: data.hardware }),
+      });
     },
   },
 });
