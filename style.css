@@ -71,6 +71,7 @@ chat-hist {
     background: var(--gaius-light-grey);
     height: 80%;
     width: 100%;
+    overflow: auto;
     justify-content: start;
 }
 
@@ -119,14 +120,17 @@ button.GaiusButton.red:hover {
 }
 
 gaius-message {
+    box-sizing: border-box;
     width: 100%;
     color: var(--gaius-dark-grey);
     display: flex;
+    flex-direction: column;
     align-items: center;
     height: 2rem;
     flex-direction: row;
     padding-left: 2rem;
     padding-right: 2rem;
+    height: fit-content;
 }
 
 gaius-message.Yes {
@@ -146,7 +150,12 @@ gaius-message.Loading {
 }
 
 gaius-message.user {
-    background: var(--gaius-light-blue);
+    background-color: var(--gaius-light-blue);
+    border-top: 5px solid var(--gaius-dark-blue);
+    border-bottom: 5px solid var(--gaius-dark-blue);
+    border-left: 0;
+    border-right: 0;
+    border-style: double;
 }
 
 send-prompt {
@@ -157,6 +166,12 @@ send-prompt {
     flex-direction: row;
     justify-content: space-between;
     align-items: start;
+}
+
+@media print {
+    send-prompt {
+        display: none !important;
+    }
 }
 
 gaius-text-area {

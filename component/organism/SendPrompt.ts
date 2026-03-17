@@ -5,5 +5,5 @@ const gta = GaiusTextArea({ bindTo: "prompt", rows: "5", id: "prompt" });
 const aC = ActionCol();
 
 export default function SendPrompt() {
-  return `<send-prompt @keyup.shift.enter="func_s.submitPrompt($data)">${gta}${aC}</send-prompt>`;
+  return `<send-prompt x-show="modelStatus === 'LOADED'" @keyup.shift.enter="func_s.submitPrompt($data)">${gta}${aC}</send-prompt>`;
 }

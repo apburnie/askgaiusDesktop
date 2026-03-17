@@ -1,11 +1,8 @@
 import { $ } from "bun";
 import Page from "./index.html";
-
-const LLAMA_CPP_VERSION = "b8352";
-const MODEL = "Qwen3.5-9B-Q4_K_M.gguf";
+import { LLAMA_CPP_VERSION, MODEL, UI_PORT, SERVER_PORT } from "./constant";
 
 function compToModelPath({ os, hardware }: { os: string; hardware: string }) {
-  console.log(import.meta.dir);
   let path = `llama-cpp/${LLAMA_CPP_VERSION}/${os}/`;
   const LLAMA_STEM = `llama-${LLAMA_CPP_VERSION}`;
   const MAC_STEM = "-bin-macos-";
@@ -68,7 +65,7 @@ function compToModelPath({ os, hardware }: { os: string; hardware: string }) {
 }
 
 const server = Bun.serve({
-  port: 3000,
+  port: UI_PORT,
   routes: {
     "/": Page,
     "/start-server": async (req) => {
@@ -77,18 +74,13 @@ const server = Bun.serve({
       const { os, hardware } = body as { os: string; hardware: string };
       const path = compToModelPath({ os, hardware });
 
-      await $`./${path}/llama-server -m ./model/${MODEL}`;
+      await $`./${path}/llama-server -m ./model/${MODEL} --port ${SERVER_PORT} --no-webui --reasoning-budget 0`;
 
       return new Response("success");
-    },
-    "/console-test": async (req) => {
-      const value = await $`echo hello from bun`.text();
-
-      return new Response(value);
     },
   },
 });
 
 console.log(`Listening on ${server.url}`);
 
-await $`open http://localhost:3000`;
+await $`open http://localhost:${UI_PORT}`;

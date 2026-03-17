@@ -3,10 +3,6 @@ export default function GaiusMessage(props: {
   text: string;
   attr?: { [key: string]: string };
 }) {
-  if (props.align === undefined) {
-    props.align = "center";
-  }
-
   const attrBlock = [];
 
   if (props.attr) {
