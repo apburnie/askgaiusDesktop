@@ -217,3 +217,16 @@ action-col {
     gap: 0.5rem;
     padding: 1rem;
 }
+
+.spin {
+    animation: rotate 3s infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -13,11 +13,11 @@ export default function ChatHist() {
     </template>
 
     <div x-show="modelStatus === 'UNLOADED'" style="margin: auto; display: flex; justify-content: center; font-weight: 700">
-      ${GaiusMessage({ tone: "Loading", text: "Model Loading ..." })}
+      ${GaiusMessage({ tone: "Loading", text: "Model Loading" })}
     </div>
 
     <div x-show="modelStatus === 'PROCESSING'" style="margin: auto; display: flex; justify-content: center; font-weight: 700">
-      ${GaiusMessage({ tone: "Loading", text: "Processing Prompt ..." })}
+      ${GaiusMessage({ tone: "Loading", text: "Processing Prompt" })}
     </div>
 
   </chat-hist>

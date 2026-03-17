@@ -17,6 +17,9 @@ export default function GaiusMessage(props: {
 
   return `
   <gaius-message ${attrString} >
-    ${props.text}
+    <div style="display: flex; flex-direction: row; gap: 1rem;">
+       <div>${props.text}</div>
+       <div class="spin" style="display: ${props.tone === "Loading" ? "inline" : "none"}">🛞</div>
+    </div>
   </gaius-message>`;
 }
