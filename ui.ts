@@ -24,7 +24,7 @@ interface Data {
   os: string;
   hardware: string;
   modelStatus: "UNLOADED" | "LOADED" | "PROCESSING";
-  brainKG: { subject: string; predicate: string; object: string }[];
+  brainKG: string;
 }
 
 const main = `${Home()}${Converse()}`;
@@ -37,24 +37,32 @@ const data: () => Data = () => ({
   os: "UBUNTU",
   hardware: "vulkan",
   modelStatus: "UNLOADED",
-  brainKG: [{ subject: "Assistant", predicate: "is called", object: "Gaius" }],
+  brainKG: `The name of the assistant is Gaius`,
   main,
   func_s: {
     async buildMemory(data: Data) {
-      const first_hist = {
-        role: "system",
-        content: `Your aim is to improve a subject-predicate-object knowledge graph with provided information.
-        Your start with the following knowledge graph: ${JSON.stringify({ data: data.brainKG })}
-        Only output the knowledge graph in the following JSON format: {"data": {"subject": string, "predicate": string, "object": string}[] }.
-
-        `,
-      };
-
+      const pen_prompt = data.hist[data.hist.length - 2];
       const last_prompt = data.hist[data.hist.length - 1];
 
       const input_hist = [
-        first_hist,
-        { role: "user", content: last_prompt?.content },
+        {
+          role: "user",
+          content: `
+          You have the following summary of the previous conversation:
+
+          ${data.brainKG}
+
+          The user's last prompt was:
+
+          ${pen_prompt?.content}
+
+          Your response was:
+
+          ${last_prompt?.content}
+
+          In less than 300 words describe the user's objectives and any information helpful to achieving these objectives.
+          `,
+        },
       ];
 
       console.log(input_hist);
@@ -85,23 +93,12 @@ const data: () => Data = () => ({
 
       console.log("store assistant answer in brain:", assistant_answer);
 
-      const proc_assistant_answer = assistant_answer.substring(
-        assistant_answer.indexOf("{"),
-        assistant_answer.lastIndexOf("}") + 1,
-      );
-
-      console.log(proc_assistant_answer);
-
-      const new_data = JSON.parse(proc_assistant_answer);
-
-      data.brainKG = [...data.brainKG, ...new_data.data];
+      data.brainKG = assistant_answer;
     },
     async submitPrompt(data: Data) {
       const first_hist = {
         role: "system",
-        content: `
-        You are a helpful assistant. You have been provided with the following knowledge graph ${JSON.stringify({ data: data.brainKG })}.
-        Use this knowledge graph and your own knowledge to answer questions. `,
+        content: `The previous conversation is summarised as follows ${data.brainKG}. Use this summary and your own knowledge to answer questions.`,
       };
 
       data.modelStatus = "PROCESSING";
