@@ -17,9 +17,7 @@
   },
   "private": true,
   "scripts": {
-    "build": " bun build ./index.ts --compile --outfile dist/ask-gaius",
-    "start": "bun build:ui && bun run index.ts",
-    "build:ui": "cd ui/dev && tsc && vite build --emptyOutDir"
+    "build": " bun build ./server.ts --compile --outfile dist/ask-gaius"
   },
   "type": "module"
 }
