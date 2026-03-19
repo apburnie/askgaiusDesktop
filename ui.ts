@@ -41,30 +41,11 @@ const data: () => Data = () => ({
   brainKG: `The name of the assistant is Gaius`,
   main,
   func_s: {
-    async compressText({
-      summary,
-      new_text,
-    }: {
-      summary: string;
-      new_text: string;
-    }) {
+    async compressText({ text }: { text: string }) {
       const input_hist = [
         {
           role: "user",
-          content: `You are receiving a stream of text. Your task is to write a summary of the text that gives the reader a clear understanding of the whole text whilst using as few words possible.
-
-               The current summary:
-
-               ${summary}
-
-               The new text:
-
-               ${new_text}
-
-               If the new text contains significant new information, update the summary and only output the summary.
-
-               If the new text does not contain significant new information, do not update the summary and only output the summary.
-               `,
+          content: `Your task is to summarize the following text in as few words possible: ${text}`,
         },
       ];
 
@@ -100,8 +81,7 @@ const data: () => Data = () => ({
       const last_prompt = data.hist[data.hist.length - 1];
 
       data.brainKG = await this.compressText!({
-        summary: data.brainKG,
-        new_text: `${pen_prompt} \n ${last_prompt}`,
+        text: `${data.brainKG} \n ${pen_prompt} \n ${last_prompt}`,
       });
     },
     async submitPrompt(data: Data) {
@@ -111,6 +91,9 @@ const data: () => Data = () => ({
       let summary = "";
       let begin_index = 0;
       if (prompt.length > PROMPT_WINDOW) {
+        const prompt_chunk_s = [];
+
+        // Split prompt into chunks
         while (begin_index < prompt.length) {
           console.log("PROGRESS", begin_index, prompt.length);
           let end_index = begin_index + PROMPT_WINDOW;
@@ -123,12 +106,20 @@ const data: () => Data = () => ({
             }
           }
 
-          summary = await this.compressText!({
-            summary,
-            new_text: prompt.slice(begin_index, end_index),
-          });
+          prompt_chunk_s.push(prompt.slice(begin_index, end_index));
           begin_index = end_index + 1;
         }
+
+        console.log("PROMPT SPLIT");
+
+        const summary_arr = await Promise.all(
+          prompt_chunk_s.slice(0, 5).map((chunk) => {
+            return this.compressText!({ text: chunk });
+          }),
+        );
+
+        summary = summary_arr.join(" ");
+        console.log("SUMMARY: ", summary);
       }
 
       const u_step = hist.length;
