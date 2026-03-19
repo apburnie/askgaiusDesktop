@@ -43,15 +43,12 @@ const data: () => Data = () => ({
   main,
   func_s: {
     async buildMemory(data: Data) {
-      const text = data.hist
-        .map(({ role, content }) => `${role} said: ${content}`)
-        .join(" ");
+      const text = data.hist.map(({ content }) => content).join(" ");
 
       const summary = summariseText({ text, numSentence: 10 });
-      console.log("input text", text);
-      console.log("memory", summary);
-
       data.brainKG = summary;
+
+      data.headerText = summariseText({ text, numSentence: 2 });
     },
     async submitPrompt(data: Data) {
       data.modelStatus = "PROCESSING";

@@ -7,15 +7,16 @@ import {
   getValueOrZero,
 } from "../util/tf_idf";
 
-const TEST_SENTENCE = `This is a test sentence, which is great to see.
-  This sentence has a reference at the end.[a] This sentence has numbers 0.1231 0.a. This is end sentence`;
+const TEST_SENTENCE = `This is a test sentence, which is great to see!
+  This sentence has a reference at the end.[a] 3. This is a question? This sentence has numbers 0.1231 0.a. This is end sentence.`;
 
 test("paragraphs to sentences", () => {
   const test_ans = [
-    "This is a test sentence, which is great to see",
-    "This sentence has a reference at the end",
-    "[a] This sentence has numbers 0.1231 0.a",
-    "This is end sentence",
+    "This is a test sentence, which is great to see!",
+    "This sentence has a reference at the end.",
+    "a] 3. This is a question?",
+    "This sentence has numbers 0.1231 0.a.",
+    "This is end sentence.",
   ];
 
   const sent_s = para_to_sent_s(TEST_SENTENCE);
@@ -42,9 +43,6 @@ test("words to term frequencies", () => {
   const sentence = "a b 0.1 b bc, b: a b";
 
   const tf_s = word_s_to_word_count_s(sent_to_word_s(sentence));
-
-  console.log("FOUND", tf_s);
-  console.log("EXPECT", test_ans);
 
   Object.keys(test_ans).forEach((sent, i) => {
     expect(tf_s[sent]).toBe(test_ans[sent]!);
