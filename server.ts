@@ -1,6 +1,13 @@
 import { $ } from "bun";
 import Page from "./index.html";
-import { LLAMA_CPP_VERSION, MODEL, UI_PORT, SERVER_PORT } from "./constant";
+import {
+  LLAMA_CPP_VERSION,
+  MODEL,
+  UI_PORT,
+  SERVER_PORT,
+  SUMMARY_MODEL,
+  SUMMARY_PORT,
+} from "./constant";
 
 function compToModelPath({ os, hardware }: { os: string; hardware: string }) {
   let path = `llama-cpp/${LLAMA_CPP_VERSION}/${os}/`;
@@ -75,6 +82,16 @@ const server = Bun.serve({
       const path = compToModelPath({ os, hardware });
 
       await $`./${path}/llama-server -m ./model/${MODEL} --port ${SERVER_PORT} --no-webui --reasoning-budget 0`;
+
+      return new Response("success");
+    },
+    "/start-summary-server": async (req) => {
+      const body = await req.json();
+
+      const { os, hardware } = body as { os: string; hardware: string };
+      const path = compToModelPath({ os, hardware });
+
+      await $`./${path}/llama-server -m ./model/${SUMMARY_MODEL} --port ${SUMMARY_PORT} --no-webui --reasoning-budget 0`;
 
       return new Response("success");
     },

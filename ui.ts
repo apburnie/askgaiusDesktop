@@ -1,10 +1,11 @@
 import Alpine from "alpinejs";
 
 import { Home, Converse } from "./component/page";
-import { MODEL, SERVER_PORT } from "./constant";
+import { MODEL, PROMPT_WINDOW, SERVER_PORT, SUMMARY_PORT } from "./constant";
 
 import { parse } from "marked";
 import Dompurify from "dompurify";
+import { isObjectBindingPattern } from "typescript";
 
 type PageType = "HOME" | "CONVERSE";
 type HistType = {
@@ -40,32 +41,32 @@ const data: () => Data = () => ({
   brainKG: `The name of the assistant is Gaius`,
   main,
   func_s: {
-    async buildMemory(data: Data) {
-      const pen_prompt = data.hist[data.hist.length - 2];
-      const last_prompt = data.hist[data.hist.length - 1];
-
+    async compressText({
+      summary,
+      new_text,
+    }: {
+      summary: string;
+      new_text: string;
+    }) {
       const input_hist = [
         {
           role: "user",
-          content: `
-          You have the following summary of the previous conversation:
+          content: `You are receiving a stream of text. Your task is to write a summary of the text that gives the reader a clear understanding of the whole text whilst using as few words possible.
 
-          ${data.brainKG}
+               The current summary:
 
-          The user's last prompt was:
+               ${summary}
 
-          ${pen_prompt?.content}
+               The new text:
 
-          Your response was:
+               ${new_text}
 
-          ${last_prompt?.content}
+               If the new text contains significant new information, update the summary and only output the summary.
 
-          In less than 300 words describe the user's objectives and any information helpful to achieving these objectives.
-          `,
+               If the new text does not contain significant new information, do not update the summary and only output the summary.
+               `,
         },
       ];
-
-      console.log(input_hist);
 
       const body = {
         model: MODEL,
@@ -73,7 +74,7 @@ const data: () => Data = () => ({
       };
 
       const resp = await fetch(
-        `http://localhost:${SERVER_PORT}/v1/chat/completions`,
+        `http://localhost:${SUMMARY_PORT}/v1/chat/completions`,
         {
           method: "POST",
           headers: {
@@ -87,29 +88,62 @@ const data: () => Data = () => ({
       const json: { choices: { message: { content: string } }[] } =
         await resp.json();
 
-      console.log("KG ans", json);
-
       const assistant_answer = json.choices[0]?.message.content || "";
 
-      console.log("store assistant answer in brain:", assistant_answer);
+      console.log("summary", assistant_answer);
 
-      data.brainKG = assistant_answer;
+      return assistant_answer;
+    },
+
+    async buildMemory(data: Data) {
+      const pen_prompt = data.hist[data.hist.length - 2];
+      const last_prompt = data.hist[data.hist.length - 1];
+
+      data.brainKG = await this.compressText!({
+        summary: data.brainKG,
+        new_text: `${pen_prompt} \n ${last_prompt}`,
+      });
     },
     async submitPrompt(data: Data) {
-      const first_hist = {
-        role: "system",
-        content: `The previous conversation is summarised as follows ${data.brainKG}. Use this summary and your own knowledge to answer questions.`,
-      };
-
       data.modelStatus = "PROCESSING";
       const { hist, prompt } = data;
+
+      let summary = "";
+      let begin_index = 0;
+      if (prompt.length > PROMPT_WINDOW) {
+        while (begin_index < prompt.length) {
+          console.log("PROGRESS", begin_index, prompt.length);
+          let end_index = begin_index + PROMPT_WINDOW;
+
+          if (end_index >= prompt.length) {
+            end_index = prompt.length - 1;
+          } else {
+            while (prompt[end_index] !== ".") {
+              end_index = end_index - 1;
+            }
+          }
+
+          summary = await this.compressText!({
+            summary,
+            new_text: prompt.slice(begin_index, end_index),
+          });
+          begin_index = end_index + 1;
+        }
+      }
 
       const u_step = hist.length;
       const a_step = hist.length + 1;
 
+      let input = "";
+      if (summary !== "") {
+        input = summary;
+      } else {
+        input = prompt;
+      }
+
       const user_prompt = {
         role: "user",
-        content: prompt,
+        content: input,
       };
 
       hist.push({
@@ -117,26 +151,29 @@ const data: () => Data = () => ({
         convert_content: Dompurify.sanitize(await parse(prompt)),
         ...user_prompt,
       });
-
+      const first_hist = {
+        role: "system",
+        content: `The previous conversation is summarised as follows ${data.brainKG}. Use this summary and your own knowledge to answer questions.`,
+      };
       const body = {
         model: MODEL,
         messages: [first_hist, user_prompt],
       };
 
-      const resp = await fetch(
-        `http://localhost:${SERVER_PORT}/v1/chat/completions`,
-        {
+      const resp = await Promise.all([
+        fetch(`http://localhost:${SERVER_PORT}/v1/chat/completions`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer no-key",
           },
           body: JSON.stringify(body),
-        },
-      );
+        }),
+        this.buildMemory!(data),
+      ]);
 
       const json: { choices: { message: { content: string } }[] } =
-        await resp.json();
+        await resp[0].json();
 
       const assistant_answer = json.choices[0]?.message.content || "";
 
@@ -147,39 +184,51 @@ const data: () => Data = () => ({
         convert_content: Dompurify.sanitize(await parse(assistant_answer)),
       });
 
-      await this.buildMemory!(data);
-
       data.prompt = "";
 
       data.modelStatus = "LOADED";
     },
     async startServer(data: Data) {
       if (data.page === "CONVERSE") {
-        await fetch("/start-server", {
+        (fetch("/start-server", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ os: data.os, hardware: data.hardware }),
-        });
+        }),
+          await fetch("/start-summary-server", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ os: data.os, hardware: data.hardware }),
+          }));
       }
     },
     async pollServer(data: Data) {
       if (data.page === "CONVERSE") {
         const refreshID = setInterval(async () => {
           console.log("check health");
-          const resp = await fetch(`http://localhost:${SERVER_PORT}/health`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+          try {
+            const resp = await fetch(
+              `http://localhost:${SUMMARY_PORT}/health`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              },
+            );
 
-          const json = await resp.json();
+            const json = await resp.json();
 
-          if (json?.status === "ok") {
-            data.modelStatus = "LOADED";
-            clearInterval(refreshID);
+            if (json?.status === "ok") {
+              data.modelStatus = "LOADED";
+              clearInterval(refreshID);
+            }
+          } catch {
+            console.error("No server yet");
           }
         }, 1000);
       }
