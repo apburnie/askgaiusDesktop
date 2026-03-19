@@ -7,6 +7,7 @@ import { parse } from "marked";
 import Dompurify from "dompurify";
 
 import { summariseText } from "./util/tf_idf";
+import { SYSTEM_PROMPT } from "./util/system_prompt";
 
 type PageType = "HOME" | "CONVERSE";
 type HistType = {
@@ -27,6 +28,8 @@ interface Data {
   hardware: string;
   modelStatus: "UNLOADED" | "LOADED" | "PROCESSING";
   brainKG: string;
+  systemPrompt: string;
+  converseSubPage: "CONVERSE" | "SETTING";
 }
 
 const main = `${Home()}${Converse()}`;
@@ -34,14 +37,20 @@ const main = `${Home()}${Converse()}`;
 const data: () => Data = () => ({
   page: "HOME",
   hist: [],
-  headerText: "Welcome to Ask Gaius",
+  headerText: "",
   prompt: "",
   os: "UBUNTU",
   hardware: "vulkan",
   modelStatus: "UNLOADED",
   brainKG: `The name of the assistant is Gaius`,
+  systemPrompt: SYSTEM_PROMPT.BASE,
+  converseSubPage: "CONVERSE",
   main,
   func_s: {
+    activatePromptTrainer(data: Data) {
+      data.systemPrompt = SYSTEM_PROMPT.PROMPT_TRAINER;
+      data.converseSubPage = "CONVERSE";
+    },
     async buildMemory(data: Data) {
       const text = data.hist.map(({ content }) => content).join(" ");
 
@@ -83,9 +92,10 @@ const data: () => Data = () => ({
       });
       const first_hist = {
         role: "system",
-        content: `The previous conversation is summarised as follows
+        content: `You are a helpful assistant called Gaius.
+        The previous conversation is summarised as follows:
         ${data.brainKG}
-        Use this summary and your own knowledge to answer questions.`,
+        ${data.systemPrompt}`,
       };
       const body = {
         model: MODEL,
