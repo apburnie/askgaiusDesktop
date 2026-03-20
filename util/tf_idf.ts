@@ -119,13 +119,10 @@ function doc_count_s_to_idf_s(
   return idf;
 }
 
-export function summariseText({
-  text,
-  numSentence,
-}: {
-  text: string;
-  numSentence: number;
-}) {
+export function doc_TFIDF(text: string): {
+  getSummary: (value: number) => string;
+  docTFIDF: Record<string, number>;
+} {
   // Break text up into sentences
   const sent_s = para_to_sent_s(text);
   const no_of_doc = sent_s.length;
@@ -167,9 +164,16 @@ export function summariseText({
     };
   });
 
-  return sent_score_s
-    .sort((a, b) => b.score - a.score)
-    .slice(0, numSentence)
-    .map((entry) => entry.text)
-    .join(". ");
+  function getSummary(numSentence: number) {
+    return sent_score_s
+      .sort((a, b) => b.score - a.score)
+      .slice(0, numSentence)
+      .map((entry) => entry.text)
+      .join(". ");
+  }
+
+  return {
+    getSummary,
+    docTFIDF: doc_baseline,
+  };
 }
