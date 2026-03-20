@@ -28,7 +28,7 @@ interface Data {
   hardware: string;
   modelStatus: "UNLOADED" | "LOADED" | "PROCESSING";
   brainKG: string;
-  systemPrompt: string;
+  systemPromptMode: "BASE" | "PROMPT_TRAINER";
   converseSubPage: "CONVERSE" | "SETTING";
 }
 
@@ -43,12 +43,12 @@ const data: () => Data = () => ({
   hardware: "vulkan",
   modelStatus: "UNLOADED",
   brainKG: `The name of the assistant is Gaius`,
-  systemPrompt: SYSTEM_PROMPT.BASE,
+  systemPromptMode: "BASE",
   converseSubPage: "CONVERSE",
   main,
   func_s: {
     activatePromptTrainer(data: Data) {
-      data.systemPrompt = SYSTEM_PROMPT.PROMPT_TRAINER;
+      data.systemPromptMode = "PROMPT_TRAINER";
       data.converseSubPage = "CONVERSE";
     },
     async buildMemory(data: Data) {
@@ -95,7 +95,7 @@ const data: () => Data = () => ({
         content: `You are a helpful assistant called Gaius.
         The previous conversation is summarised as follows:
         ${data.brainKG}
-        ${data.systemPrompt}`,
+        ${SYSTEM_PROMPT[data.systemPromptMode]}`,
       };
       const body = {
         model: MODEL,
