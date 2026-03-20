@@ -9,23 +9,37 @@ export type HistType = {
   convert_content: string;
 }[];
 
-export interface Data {
+export interface ConversationData {
   currentID: null | number;
-  page: PageType;
   headerText: string;
-  prompt: string;
-  main: string;
-  func_s: Record<string, Function>;
   hist: HistType;
-  os: string;
-  hardware: string;
-  modelStatus: ModelStatusType;
   brain: string;
+  tfidf: Record<string, number>;
+}
+
+interface UIData {
+  page: PageType;
+  modelStatus: ModelStatusType;
+  main: string;
+  prompt: string;
   systemPromptMode: SystemPromptModeType;
   converseSubPage: ConverseSubPageType;
-  tfidf: Record<string, number>;
+}
+
+interface UserData {
+  os: string;
+  hardware: string;
+}
+
+interface CacheData {
   loadMeta: StoredSaveDataItem[];
 }
+
+interface FuncData {
+  func_s: Record<string, Function>;
+}
+
+export type Data = FuncData & CacheData & UserData & UIData & ConversationData;
 
 export interface SentSaveDataItem {
   currentID: null | number;

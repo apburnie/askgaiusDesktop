@@ -6,7 +6,7 @@ const aC = ActionCol();
 
 export default function SendPrompt() {
   return `<send-prompt x-show="modelStatus === 'LOADED'" @keyup.shift.enter="func_s.submitPrompt($data)">
-            <system-prompt-container>
+            <system-prompt-container >
               ${gta}
               <system-prompt-mode x-show="systemPromptMode === 'PROMPT_TRAINER'">
                 <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}" })}</div>

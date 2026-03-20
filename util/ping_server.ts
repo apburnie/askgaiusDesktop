@@ -13,7 +13,7 @@ export async function startServer(data: Data) {
   }
 }
 export async function pollServer(data: Data) {
-  if (data.page === "CONVERSE") {
+  if (data.page === "CONVERSE" && data.modelStatus === "UNLOADED") {
     const refreshID = setInterval(async () => {
       console.log("check health");
       try {

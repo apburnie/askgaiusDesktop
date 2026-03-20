@@ -6,7 +6,6 @@ import { type Data } from "./type";
 import {
   activatePromptTrainer,
   buildMemory,
-  clearData,
   loadConversation_s,
   pollServer,
   saveConversation,
@@ -21,7 +20,15 @@ const main = `${Home()}${Continue()}${Converse()}`;
 
 const data: () => Data = () => ({
   ...DEFAULT_DATA,
+  page: "HOME",
+  modelStatus: "UNLOADED",
   main,
+  prompt: "",
+  systemPromptMode: "BASE",
+  converseSubPage: "CONVERSE",
+  os: "UBUNTU",
+  hardware: "vulkan",
+  loadMeta: [],
   func_s: {
     startServer,
     pollServer,

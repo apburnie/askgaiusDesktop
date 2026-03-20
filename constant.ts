@@ -1,4 +1,5 @@
 import type {
+  ConversationData,
   ConverseSubPageType,
   ModelStatusType,
   PageType,
@@ -11,18 +12,10 @@ export const UI_PORT = 2000;
 export const SERVER_PORT = 2001;
 export const PROMPT_WINDOW = 500;
 
-export const DEFAULT_DATA = {
+export const DEFAULT_DATA: ConversationData = {
   currentID: null,
-  page: "HOME" as PageType,
-  hist: [],
   headerText: "",
-  prompt: "",
-  os: "UBUNTU",
-  hardware: "vulkan",
-  modelStatus: "UNLOADED" as ModelStatusType,
+  hist: [],
   brain: `The name of the assistant is Gaius`,
-  systemPromptMode: "BASE" as SystemPromptModeType,
-  converseSubPage: "CONVERSE" as ConverseSubPageType,
   tfidf: {},
-  loadMeta: [],
 };

@@ -1,5 +1,6 @@
 import { DEFAULT_DATA } from "../constant";
 import {
+  type ConversationData,
   type Data,
   type SentSaveDataItem,
   type StoredSaveDataItem,
@@ -66,8 +67,11 @@ export async function switchForID(meta: StoredSaveDataItem, data: Data) {
   data.tfidf = meta.tfidf;
   data.page = "CONVERSE";
 }
+
 export function startNewSession(data: Data) {
-  Object.keys(DEFAULT_DATA).forEach((key) => {
+  const key_s = Object.keys(DEFAULT_DATA);
+
+  key_s.forEach((key) => {
     data[key] = DEFAULT_DATA[key];
   });
   data.page = "CONVERSE";
