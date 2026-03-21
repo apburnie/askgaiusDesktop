@@ -13,3 +13,10 @@ export const DEFAULT_DATA: ConversationData = {
   brain: `The name of the assistant is Gaius`,
   tfidf: {},
 };
+
+export const OS = ["UBUNTU", "WINDOWS"];
+
+export const HARDWARE = {
+  UBUNTU: ["x64", "vulkan", "s390x", "rocm", "openvino"],
+  WINDOWS: ["vulkan", "sycl", "hip", "cuda13", "cuda12", "cpuX64", "cpuARM64"],
+};
