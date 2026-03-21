@@ -9,6 +9,7 @@ export default function Continue() {
 
 
   </template>
+  ${GaiusButton({ colour: "green", text: "🏛️ Home Page", func: "() => {page = 'HOME'; converseSubPage = 'CONVERSE', headerText = 'Gaius Chat';} " })}
   </continue-container>
   `;
 }

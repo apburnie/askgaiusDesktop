@@ -2,7 +2,7 @@ import { $ } from "bun";
 import Page from "./index.html";
 import { MODEL, UI_PORT, SERVER_PORT } from "./constant";
 import { compToModelPath } from "./util";
-import { loadDataAPI, saveDataAPI } from "./util/server";
+import { deleteDataAPI, loadDataAPI, saveDataAPI } from "./util/server";
 
 const server = Bun.serve({
   port: UI_PORT,
@@ -20,6 +20,7 @@ const server = Bun.serve({
     },
     "/save-data": saveDataAPI,
     "/load-data": loadDataAPI,
+    "/delete-data": deleteDataAPI,
   },
 });
 

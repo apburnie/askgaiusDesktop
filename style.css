@@ -267,6 +267,7 @@ continue-container {
     gap: 2rem;
     padding: 2rem;
     box-sizing: border-box;
+    overflow: auto;
 }
 
 load-option {

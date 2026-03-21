@@ -1,11 +1,12 @@
 import Alpine from "alpinejs";
 
-import { Home, Converse, Continue } from "./component/page";
+import { Home, Converse, Continue, Delete } from "./component/page";
 
 import { type Data } from "./type";
 import {
   activatePromptTrainer,
   buildMemory,
+  deleteByID,
   loadConversation_s,
   pollServer,
   saveConversation,
@@ -16,7 +17,7 @@ import {
 } from "./util";
 import { DEFAULT_DATA } from "./constant";
 
-const main = `${Home()}${Continue()}${Converse()}`;
+const main = `${Home()}${Continue()}${Delete()}${Converse()}`;
 
 const data: () => Data = () => ({
   ...DEFAULT_DATA,
@@ -39,6 +40,7 @@ const data: () => Data = () => ({
     loadConversation_s,
     switchForID,
     startNewSession,
+    deleteByID,
   },
 });
 

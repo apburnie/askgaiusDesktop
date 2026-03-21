@@ -1,10 +1,4 @@
-import type {
-  ConversationData,
-  ConverseSubPageType,
-  ModelStatusType,
-  PageType,
-  SystemPromptModeType,
-} from "./type";
+import type { ConversationData } from "./type";
 
 export const LLAMA_CPP_VERSION = "b8352";
 export const MODEL = "Qwen3.5-9B-Q4_K_M.gguf";

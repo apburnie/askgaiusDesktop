@@ -1,4 +1,4 @@
-export type PageType = "HOME" | "CONVERSE" | "CONTINUE";
+export type PageType = "HOME" | "CONVERSE" | "CONTINUE" | "DELETE";
 export type ModelStatusType = "UNLOADED" | "LOADED" | "PROCESSING";
 export type SystemPromptModeType = "BASE" | "PROMPT_TRAINER";
 export type ConverseSubPageType = "CONVERSE" | "SETTING";

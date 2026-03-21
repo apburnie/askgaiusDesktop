@@ -39,6 +39,22 @@ export async function saveConversation(data: Data) {
   data.currentID = saveJSON.id;
 }
 
+export async function deleteByID(searchID: number, data: Data) {
+  const saveResp = await fetch("/delete-data", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: searchID }),
+  });
+
+  const loadJSON = (await saveResp.json()) as { status: string };
+
+  if (loadJSON.status === "success") {
+    data.page = "HOME";
+  }
+}
+
 export async function loadConversation_s(data: Data) {
   const saveResp = await fetch("/load-data", {
     method: "GET",
