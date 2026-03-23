@@ -4,6 +4,8 @@ export type SystemPromptModeType = "BASE" | "PROMPT_TRAINER";
 export type ConverseSubPageType = "CONVERSE" | "SETTING";
 export type OSType = "UBUNTU" | "WINDOWS" | "unsupported";
 
+export type TFIDFType = Record<string, number>;
+
 export type HistType = {
   step: number;
   role: string;
@@ -16,7 +18,7 @@ export interface ConversationData {
   headerText: string;
   hist: HistType;
   brain: string;
-  tfidf: Record<string, number>;
+  tfidf: TFIDFType;
 }
 
 interface UIData {
@@ -43,7 +45,7 @@ export interface SentSaveDataItem {
   hist: HistType;
   headerText: string;
   brain: string;
-  tfidf: Record<string, number>;
+  tfidf: TFIDFType;
 }
 
 export interface StoredSaveDataItem extends Omit<

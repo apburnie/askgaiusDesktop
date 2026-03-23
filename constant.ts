@@ -10,7 +10,7 @@ export const DEFAULT_DATA: ConversationData = {
   currentID: null,
   headerText: "",
   hist: [],
-  brain: `The name of the assistant is Gaius`,
+  brain: "",
   tfidf: {},
 };
 

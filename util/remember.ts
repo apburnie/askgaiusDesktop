@@ -4,6 +4,7 @@ import {
   type Data,
   type SentSaveDataItem,
   type StoredSaveDataItem,
+  type TFIDFType,
 } from "../type";
 import { doc_TFIDF } from "./tf_idf";
 
@@ -91,4 +92,26 @@ export function startNewSession(data: Data) {
     data[key] = DEFAULT_DATA[key];
   });
   data.page = "CONVERSE";
+}
+
+export async function getClosestSummary({
+  id,
+  tfidf,
+}: {
+  id: number | null;
+  tfidf: TFIDFType;
+}) {
+  const resp = await fetch("/load-closest", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id, tfidf }),
+  });
+
+  const { closestExternal } = (await resp.json()) as {
+    closestExternal: string;
+  };
+
+  return closestExternal;
 }
