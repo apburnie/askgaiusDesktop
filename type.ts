@@ -1,4 +1,10 @@
-export type PageType = "HOME" | "CONVERSE" | "CONTINUE" | "DELETE";
+export type PageType =
+  | "WELCOME"
+  | "CUSTOM"
+  | "HOME"
+  | "CONVERSE"
+  | "CONTINUE"
+  | "DELETE";
 export type ModelStatusType = "UNLOADED" | "LOADED" | "PROCESSING";
 export type SystemPromptModeType = "BASE" | "PROMPT_TRAINER";
 export type ConverseSubPageType = "CONVERSE" | "SETTING";
@@ -61,3 +67,16 @@ export interface SaveDataSet {
   latestID: number;
   conversationS: StoredSaveDataItem[];
 }
+
+export type OSType = "WINDOWS" | "UBUNTU" | "unsupported";
+export type HardwareType =
+  | "vulkan"
+  | "s390x"
+  | "rocm"
+  | "openvino"
+  | "x64"
+  | "sycl"
+  | "hip"
+  | "cuda13"
+  | "cuda12"
+  | "arm64";

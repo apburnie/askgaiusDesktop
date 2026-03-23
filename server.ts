@@ -1,8 +1,11 @@
 import { $ } from "bun";
 import Page from "./index.html";
 import { MODEL, UI_PORT, SERVER_PORT } from "./constant";
-import { compToModelPath } from "./util";
+import { convert_os_and_hardware_to_model_path } from "./util";
 import { deleteDataAPI, loadDataAPI, saveDataAPI } from "./util/server";
+import { createCompSpecAPI, getCompSpecAPI } from "./util/server/changeSpec";
+
+let p_process: ReturnType<Bun.spawn>;
 
 const server = Bun.serve({
   port: UI_PORT,
@@ -12,15 +15,30 @@ const server = Bun.serve({
       const body = await req.json();
 
       const { os, hardware } = body as { os: string; hardware: string };
-      const path = compToModelPath({ os, hardware });
+      const path = convert_os_and_hardware_to_model_path({ os, hardware });
 
-      await $`./${path}/llama-server -m ./model/${MODEL} --port ${SERVER_PORT} --no-webui --reasoning-budget 0`;
+      p_process = Bun.spawnSync([
+        `./${path}/llama-server`,
+        "-m",
+        `./model/${MODEL}`,
+        "--port",
+        `${SERVER_PORT}`,
+        //"--no-webui",
+        "--reasoning-budget",
+        `${0}`,
+      ]);
 
+      return new Response("success");
+    },
+    "/kill-server": async () => {
+      p_process?.kill();
       return new Response("success");
     },
     "/save-data": saveDataAPI,
     "/load-data": loadDataAPI,
     "/delete-data": deleteDataAPI,
+    "/create-compspec": createCompSpecAPI,
+    "/get-compspec": getCompSpecAPI,
   },
 });
 

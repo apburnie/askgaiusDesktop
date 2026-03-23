@@ -16,7 +16,7 @@ export const DEFAULT_DATA: ConversationData = {
 
 export const OS = ["UBUNTU", "WINDOWS"];
 
-export const HARDWARE = {
-  UBUNTU: ["x64", "vulkan", "s390x", "rocm", "openvino"],
-  WINDOWS: ["vulkan", "sycl", "hip", "cuda13", "cuda12", "cpuX64", "cpuARM64"],
+export const HARDWARE: Record<(typeof OS)[number], string[]> = {
+  UBUNTU: ["vulkan", "s390x", "rocm", "openvino", "x64"],
+  WINDOWS: ["vulkan", "sycl", "hip", "cuda13", "cuda12", "x64", "arm64"],
 };

@@ -1,6 +1,5 @@
 import { DEFAULT_DATA } from "../constant";
 import {
-  type ConversationData,
   type Data,
   type SentSaveDataItem,
   type StoredSaveDataItem,

@@ -260,7 +260,9 @@ action-col {
 
 home-container,
 setting-container,
-continue-container {
+continue-container,
+welcome-container,
+custom-container {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -276,4 +278,40 @@ load-option {
     gap: 2rem;
     padding: 2rem;
     width: 100%;
+}
+
+welcome-container {
+    padding: 0;
+    justify-content: space-between;
+}
+
+welcome-container h1 {
+    height: 10%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+welcome-container image-container {
+    height: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+welcome-container image-container > img {
+    height: 100%;
+}
+
+welcome-container option-container {
+    height: 20%;
+    display: flex;
+    gap: 20%;
+    padding: 10%;
+}
+
+custom-container,
+custom-container select {
+    font-size: 2rem;
 }

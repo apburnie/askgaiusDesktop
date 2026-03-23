@@ -10,7 +10,7 @@ export default function Delete() {
  <template x-for="meta in loadMeta" :key="meta.id">
  ${GaiusButton({ colour: "red", text: '<load-option><div  x-text="new Date(meta.timeAtSave).toLocaleString()"></div><div x-text="meta.headerText"></div></load-option>', func: "async () => await func_s.deleteByID(meta.id, $data)" })}
   </template>
-  ${GaiusButton({ colour: "green", text: "🏛️ Home Page", func: "() => {page = 'HOME'; converseSubPage = 'CONVERSE', headerText = 'Gaius Chat';} " })}
+  ${GaiusButton({ colour: "green", text: "🏛️ Home Page", func: "() => {page = 'WELCOME'; converseSubPage = 'CONVERSE', headerText = 'Gaius Chat';} " })}
   </continue-container>
   `;
 }
