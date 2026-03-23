@@ -1,14 +1,19 @@
 import { type Data } from "../type";
 import { SERVER_PORT } from "../constant";
+import { get_default_os_and_hardware } from "./path";
 
 export async function startServer(data: Data) {
   if (data.page === "CONVERSE" && data.modelStatus === "UNLOADED") {
+    const { os } = get_default_os_and_hardware();
+
+    console.log("launching on OS", os);
+
     await fetch("/start-server", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ os: data.os, hardware: data.hardware }),
+      body: JSON.stringify({ os }),
     });
   }
 }

@@ -2,6 +2,8 @@ export type PageType = "HOME" | "CONVERSE" | "CONTINUE" | "DELETE";
 export type ModelStatusType = "UNLOADED" | "LOADED" | "PROCESSING";
 export type SystemPromptModeType = "BASE" | "PROMPT_TRAINER";
 export type ConverseSubPageType = "CONVERSE" | "SETTING";
+export type OSType = "UBUNTU" | "WINDOWS" | "unsupported";
+
 export type HistType = {
   step: number;
   role: string;
@@ -26,11 +28,6 @@ interface UIData {
   converseSubPage: ConverseSubPageType;
 }
 
-interface UserData {
-  os: string;
-  hardware: string;
-}
-
 interface CacheData {
   loadMeta: StoredSaveDataItem[];
 }
@@ -39,7 +36,7 @@ interface FuncData {
   func_s: Record<string, Function>;
 }
 
-export type Data = FuncData & CacheData & UserData & UIData & ConversationData;
+export type Data = FuncData & CacheData & UIData & ConversationData;
 
 export interface SentSaveDataItem {
   currentID: null | number;

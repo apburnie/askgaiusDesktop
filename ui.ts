@@ -27,8 +27,6 @@ const data: () => Data = () => ({
   prompt: "",
   systemPromptMode: "BASE",
   converseSubPage: "CONVERSE",
-  os: "UBUNTU",
-  hardware: "vulkan",
   loadMeta: [],
   func_s: {
     startServer,
