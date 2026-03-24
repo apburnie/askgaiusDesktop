@@ -75,7 +75,7 @@ chat-hist {
     justify-content: start;
 }
 
-button.GaiusButton {
+.GaiusButton {
     box-sizing: border-box;
     border: none;
     border-radius: 10px;
@@ -90,30 +90,30 @@ button.GaiusButton {
     width: 100%;
 }
 
-button.GaiusButton:hover {
+.GaiusButton:hover {
     transition: var(--button-transition);
     background: var(--gaius-light-grey);
     color: var(--gaius-dark-grey);
     border: 3px solid var(--gaius-dark-grey);
 }
 
-button.GaiusButton.green {
+.GaiusButton.green {
     color: var(--gaius-light-grey);
     background: var(--gaius-dark-green);
 }
 
-button.GaiusButton.green:hover {
+.GaiusButton.green:hover {
     color: var(--gaius-dark-green);
     background: var(--gaius-light-green);
     border-color: var(--gaius-dark-green);
 }
 
-button.GaiusButton.red {
+.GaiusButton.red {
     color: var(--gaius-light-red);
     background: var(--gaius-dark-red);
 }
 
-button.GaiusButton.red:hover {
+.GaiusButton.red:hover {
     color: var(--gaius-dark-red);
     background: var(--gaius-light-red);
     border-color: var(--gaius-dark-red);
@@ -276,4 +276,8 @@ load-option {
     gap: 2rem;
     padding: 2rem;
     width: 100%;
+}
+
+input[type="file"] {
+    display: none;
 }

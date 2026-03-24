@@ -11,7 +11,7 @@ export default function GaiusMessage(props: {
     }
   }
 
-  attrBlock.push(`class="GaiusButton ${props.tone}"`);
+  attrBlock.push(`class="${props.tone}"`);
 
   const attrString = attrBlock.join(" ");
 

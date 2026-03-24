@@ -17,4 +17,5 @@ export async function parsePDF(file: File, data: Data) {
   const respJSON = (await resp.json()) as { text: string };
 
   data.prompt = respJSON.text;
+  data.converseSubPage = "CONVERSE";
 }

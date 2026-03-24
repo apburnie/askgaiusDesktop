@@ -32,7 +32,7 @@ export async function loadClosestSummary(req: Bun.BunRequest) {
     }
   }
   let closestExternal;
-  if (max_cs <= 0) {
+  if (max_cs <= 0.5) {
     closestExternal = "";
   } else {
     closestExternal = brain[max_index]?.brain;
