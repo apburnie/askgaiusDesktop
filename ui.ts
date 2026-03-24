@@ -16,6 +16,7 @@ import {
   switchForID,
 } from "./util";
 import { DEFAULT_DATA } from "./constant";
+import { printHist } from "./util/print";
 
 const main = `${Home()}${Continue()}${Delete()}${Converse()}`;
 
@@ -39,6 +40,7 @@ const data: () => Data = () => ({
     switchForID,
     startNewSession,
     deleteByID,
+    printHist,
   },
 });
 
