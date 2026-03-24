@@ -2,7 +2,7 @@ import { GaiusMessage } from "../atom";
 
 export default function ChatHist() {
   return `
-  <chat-hist x-show="converseSubPage === 'CONVERSE'" x-init="func_s.pollServer($data)">
+  <chat-hist x-show="converseSubPage === 'CONVERSE'">
     <template x-if="hist.length === 0">
     <div x-show="modelStatus === 'LOADED'" style="margin: auto; display: flex; justify-content: center; font-weight: 700">
       ${GaiusMessage({ tone: "Yes", text: "Type a prompt in the box below to start a new chat" })}

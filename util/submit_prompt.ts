@@ -7,6 +7,18 @@ import { SYSTEM_PROMPT } from "./system_prompt";
 import { MODEL, PROMPT_WINDOW, SERVER_PORT } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 
+import {
+  env,
+  Qwen3_5ForConditionalGeneration,
+  AutoProcessor,
+  Qwen3_5MoeForCausalLM,
+  AutoTokenizer,
+  pipeline,
+  AutoModelForCausalLM,
+} from "@huggingface/transformers";
+
+//env.localModelPath = "./model/Qwen3.5-4B-ONNX/";
+
 function buildUserContent(prompt: string): string {
   let summary = "";
   if (prompt.length > PROMPT_WINDOW) {
@@ -99,34 +111,69 @@ export async function submitPrompt(data: Data) {
     role: "system",
     content: system_content,
   };
-  const body = {
-    model: MODEL,
-    messages: [first_hist, user_prompt],
-  };
 
-  const resp = await fetch(
-    `http://localhost:${SERVER_PORT}/v1/chat/completions`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer no-key",
-      },
-      body: JSON.stringify(body),
+  const messages = [first_hist, user_prompt];
+
+  const model_id = "onnx-community/Qwen3.5-4B-ONNX";
+
+  console.log("create pipeline");
+
+  const pipe = await pipeline("text-generation", model_id, {
+    dtype: "q4",
+    device: "webgpu",
+  });
+
+  console.log("use pipeline");
+  const output = await pipe(messages, {
+    max_new_tokens: 1024,
+    temperature: 0.7,
+    top_k: 20,
+    top_p: 0.8,
+    tokenizer_encode_kwargs: {
+      enable_thinking: false,
     },
-  );
+  });
 
-  const json = (await resp.json()) as {
-    choices: { message: { content: string } }[];
-  };
+  const full_content = output[0]?.generated_text!;
 
-  const assistant_answer = json.choices[0]?.message.content || "";
+  const assistant_content = full_content[full_content?.length - 1]?.content;
+
+  // console.log("extract content");
+  // console.log(output);
+  // const assistant_content = output[0]?.generated_text[0]?.content;
+
+  // const model_path = "./model/Qwen3.5-4B-ONNX";
+  // const model_id = "onnx-community/Qwen3.5-4B-ONNX";
+
+  // const model = await AutoModelForCausalLM.from_pretrained(model_id, {
+  //   dtype: "q4",
+  //   device: "webgpu",
+  //   model_file_name: model_path,
+  // });
+
+  // const tokenizer = await AutoTokenizer.from_pretrained(model_id);
+
+  // const tokenized_msg = tokenizer.apply_chat_template(messages, {
+  //   tokenize: true,
+  //   add_generation_prompt: true,
+  //   return_tensor: true,
+  //   enable_thiking: false,
+  // })!;
+
+  // const outputs = await model.generate(tokenized_msg);
+  // const resp = tokenizer.decode(outputs[0], { skip_special_tokens: true });
+
+  // const assistant_start_index = resp.match(
+  //   /(?<=\<\|im\_start\|\>assistant).+/,
+  // )!;
+
+  // const assistant_content = resp.slice(assistant_start_index);
 
   data.hist.push({
     step: a_step,
     role: "assistant",
-    content: assistant_answer,
-    convert_content: Dompurify.sanitize(await parse(assistant_answer)),
+    content: assistant_content,
+    convert_content: Dompurify.sanitize(parse(assistant_content)),
   });
 
   // Remember the answer
