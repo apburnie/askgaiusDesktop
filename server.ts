@@ -18,7 +18,7 @@ const server = Bun.serve({
 
       const path = compToModelPath({ os });
 
-      await $`./${path}/llama-server -m ./model/${MODEL} --port ${SERVER_PORT} --no-webui --reasoning-budget 0`;
+      await $`./${path}/llama-server -m ./model/${MODEL} --port ${SERVER_PORT} --no-webui --reasoning-budget 0 --temp 0.7 --top-k 20 --top-p 0.8 --presence-penalty 1.5`;
 
       return new Response("success");
     },
