@@ -1,21 +1,53 @@
 import type { Data } from "../type";
-
-import html2pdf from "html2pdf.js";
+import Turndownservice from "turndown";
 
 export async function printHist(data: Data) {
-  const html = data.hist
-    .map(({ convert_content }) => convert_content)
-    .join("<hr>");
-  html2pdf().set({ margin: 10 }).from(html).save();
+  console.log("print");
+
+  const convert_content = data.hist.map(({ role, convert_content }) => {
+    if (role === "user") {
+      return `<user-content>${convert_content}</user-content>`;
+    }
+    if (role === "assistant") {
+      return `<ai-content>${convert_content}</ai-content>`;
+    }
+  });
+
+  const html = `<!DOCTYPE html>
+    <html lang="en-US">
+    <head>
+    <meta charset="UTF-8"/>
+    <title>AskGaius: ${data.headerText}</title>
+    <style>
+    user-content, ai-content {
+    display: block;
+    font-family: Arial, sans-serif;
+    }
+    user-content {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 1rem;
+    }
+    </style>
+    </head>
+    <body>${convert_content.join("")}</body>
+    </html>`;
+
+  data.hist;
+
+  const a = document.createElement("a");
+  a.setAttribute(
+    "href",
+    "data:text/plain;charset=UTF-8," + encodeURIComponent(html),
+  );
+  a.setAttribute("download", `${data.headerText}.html`);
+  a.click();
 }
 
 export async function parsePDF(file: File, data: Data) {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const resp = await fetch("/parse-pdf", { method: "POST", body: formData });
-  const respJSON = (await resp.json()) as { text: string };
-
-  data.prompt = respJSON.text;
+  const html_text = await file.text();
+  const turndown = new Turndownservice();
+  data.prompt = turndown.turndown(html_text).replace(/[\n]+/g, " ");
+  console.log("LONG PROMPT", data.prompt);
   data.converseSubPage = "CONVERSE";
 }
