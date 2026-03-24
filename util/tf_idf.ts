@@ -124,7 +124,11 @@ export function doc_TFIDF(text: string): {
   docTFIDF: Record<string, number>;
 } {
   // Break text up into sentences
-  const sent_s = para_to_sent_s(text);
+  let sent_s = para_to_sent_s(text);
+
+  // Each sentence is unique
+  sent_s = Array.from(new Set(sent_s));
+
   const no_of_doc = sent_s.length;
 
   // For each sentence get tf and word count
