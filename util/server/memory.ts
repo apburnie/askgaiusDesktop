@@ -31,8 +31,12 @@ export async function loadClosestSummary(req: Bun.BunRequest) {
       max_index = i;
     }
   }
-
-  const closestExternal = brain[max_index]?.brain;
+  let closestExternal;
+  if (max_cs <= 0) {
+    closestExternal = "";
+  } else {
+    closestExternal = brain[max_index]?.brain;
+  }
 
   return new Response(JSON.stringify({ closestExternal }));
 }

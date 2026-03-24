@@ -5,6 +5,7 @@ import { compToModelPath } from "./util";
 import { deleteDataAPI, loadDataAPI, saveDataAPI } from "./util/server";
 import type { OSType } from "./type";
 import { loadClosestSummary } from "./util/server/memory";
+import { parasePDFAPI } from "./util/server/parsePDF";
 
 const server = Bun.serve({
   port: UI_PORT,
@@ -25,6 +26,7 @@ const server = Bun.serve({
     "/load-data": loadDataAPI,
     "/delete-data": deleteDataAPI,
     "/load-closest": loadClosestSummary,
+    "/parse-pdf": parasePDFAPI,
   },
 });
 
