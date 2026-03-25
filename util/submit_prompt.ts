@@ -4,12 +4,10 @@ import Dompurify from "dompurify";
 import { type Data, type SystemPromptModeType, type TFIDFType } from "../type";
 import { doc_TFIDF } from "./tf_idf";
 import { SYSTEM_PROMPT } from "./system_prompt";
-import { MODEL, PROMPT_WINDOW, SERVER_PORT } from "../constant";
+import { PROMPT_WINDOW } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 
 import { env, pipeline } from "@huggingface/transformers";
-
-//env.localModelPath = "./model/Qwen3.5-4B-ONNX/";
 
 function buildUserContent(prompt: string): string {
   let summary = "";
