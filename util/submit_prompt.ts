@@ -7,15 +7,7 @@ import { SYSTEM_PROMPT } from "./system_prompt";
 import { MODEL, PROMPT_WINDOW, SERVER_PORT } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 
-import {
-  env,
-  Qwen3_5ForConditionalGeneration,
-  AutoProcessor,
-  Qwen3_5MoeForCausalLM,
-  AutoTokenizer,
-  pipeline,
-  AutoModelForCausalLM,
-} from "@huggingface/transformers";
+import { env, pipeline } from "@huggingface/transformers";
 
 //env.localModelPath = "./model/Qwen3.5-4B-ONNX/";
 
@@ -76,6 +68,11 @@ async function buildSystemContent({
 }
 
 export async function submitPrompt(data: Data) {
+  const model_id = "onnx-community/Qwen3.5-4B-ONNX";
+  env.localModelPath = "../model/Qwen3.5-4B-ONNX";
+  env.allowRemoteModels = false;
+  env.allowLocalModels = true;
+
   data.modelStatus = "PROCESSING";
 
   const user_content = buildUserContent(data.prompt);
@@ -113,8 +110,6 @@ export async function submitPrompt(data: Data) {
   };
 
   const messages = [first_hist, user_prompt];
-
-  const model_id = "onnx-community/Qwen3.5-4B-ONNX";
 
   console.log("create pipeline");
 
