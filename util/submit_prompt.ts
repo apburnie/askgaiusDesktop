@@ -138,37 +138,6 @@ export async function submitPrompt(data: Data) {
 
   const assistant_content = full_content[full_content?.length - 1]?.content;
 
-  // console.log("extract content");
-  // console.log(output);
-  // const assistant_content = output[0]?.generated_text[0]?.content;
-
-  // const model_path = "./model/Qwen3.5-4B-ONNX";
-  // const model_id = "onnx-community/Qwen3.5-4B-ONNX";
-
-  // const model = await AutoModelForCausalLM.from_pretrained(model_id, {
-  //   dtype: "q4",
-  //   device: "webgpu",
-  //   model_file_name: model_path,
-  // });
-
-  // const tokenizer = await AutoTokenizer.from_pretrained(model_id);
-
-  // const tokenized_msg = tokenizer.apply_chat_template(messages, {
-  //   tokenize: true,
-  //   add_generation_prompt: true,
-  //   return_tensor: true,
-  //   enable_thiking: false,
-  // })!;
-
-  // const outputs = await model.generate(tokenized_msg);
-  // const resp = tokenizer.decode(outputs[0], { skip_special_tokens: true });
-
-  // const assistant_start_index = resp.match(
-  //   /(?<=\<\|im\_start\|\>assistant).+/,
-  // )!;
-
-  // const assistant_content = resp.slice(assistant_start_index);
-
   data.hist.push({
     step: a_step,
     role: "assistant",
