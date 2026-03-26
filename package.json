@@ -20,7 +20,16 @@
   },
   "private": true,
   "scripts": {
-    "build": " bun build ./server.ts --compile --outfile dist/ask-gaius"
+    "build:linux:x64": "bun build ./server.ts --compile --target=bun-linux-x64-modern --outfile output/askGaius-linux-x64",
+    "build:linux:arm64": "bun build ./server.ts --compile --target=bun-linux-arm64 --outfile output/askGaius-linux-arm64",
+    "build:linux": "bun run build:linux:x64 && bun run build:linux:arm64",
+    "build:windows:x64": "bun build ./server.ts --compile --target=bun-windows-x64-modern --outfile output/askGaius-windows-x64",
+    "build:windows:arm64": "bun build ./server.ts --compile --target=bun-windows-arm64 --outfile output/askGaius-windows-arm64",
+    "build:windows": "bun run build:windows:x64 && bun run build:windows:arm64",
+    "build:windows:linux": "bun run build:linux && bun run build:windows",
+    "build:legacy": "bun build ./server.ts --compile --outfile dist/ask-gaius",
+    "build:macos:x64": "bun build ./server.ts --compile --target=bun-darwin-x64 --outfile output/askGaius-macos-x64",
+    "build:macos:arm64": "bun build ./server.ts --compile --target=bun-darwin-arm64 --outfile output/askGaius-macos-arm64"
   },
   "type": "module"
 }

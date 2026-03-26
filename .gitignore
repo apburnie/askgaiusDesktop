@@ -15,6 +15,7 @@ out
 dist
 *.tgz
 dist/*
+output/*
 
 # code coverage
 coverage
