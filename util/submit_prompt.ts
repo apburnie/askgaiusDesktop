@@ -66,18 +66,6 @@ async function buildSystemContent({
 }
 
 export async function submitPrompt(data: Data) {
-  // const pathResp = await fetch("/model-path", {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  // const pathJSON = await pathResp.json();
-  //
-
-  // const { path } = pathJSON as { path: string };
-  //
   const path = "./model";
 
   console.log("using path", path);
@@ -148,7 +136,7 @@ export async function submitPrompt(data: Data) {
 
   const full_content = output[0]?.generated_text!;
 
-  const assistant_content = full_content[full_content?.length - 1]?.content;
+  const assistant_content = full_content[full_content?.length - 1]?.content!;
 
   data.hist.push({
     step: a_step,
