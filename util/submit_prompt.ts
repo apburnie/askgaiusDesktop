@@ -66,8 +66,23 @@ async function buildSystemContent({
 }
 
 export async function submitPrompt(data: Data) {
-  const model_id = "onnx-community/Qwen3.5-4B-ONNX";
-  env.localModelPath = "../model/Qwen3.5-4B-ONNX";
+  // const pathResp = await fetch("/model-path", {
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  // const pathJSON = await pathResp.json();
+  //
+
+  // const { path } = pathJSON as { path: string };
+  //
+  const path = "./model";
+
+  console.log("using path", path);
+
+  env.localModelPath = path;
   env.allowRemoteModels = false;
   env.allowLocalModels = true;
 
@@ -111,10 +126,14 @@ export async function submitPrompt(data: Data) {
 
   console.log("create pipeline");
 
-  const pipe = await pipeline("text-generation", model_id, {
-    dtype: "q4",
-    device: "webgpu",
-  });
+  const pipe = await pipeline(
+    "text-generation",
+    "onnx-community/Qwen3.5-4B-ONNX",
+    {
+      dtype: "q4",
+      device: "webgpu",
+    },
+  );
 
   console.log("use pipeline");
   const output = await pipe(messages, {

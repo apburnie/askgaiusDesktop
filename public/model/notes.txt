@@ -1,0 +1,3 @@
+Source:https://huggingface.co/onnx-community/Qwen3.5-4B-ONNX/tree/main
+
+Model ID: onnx-community/Qwen3.5-4B-ONNX
