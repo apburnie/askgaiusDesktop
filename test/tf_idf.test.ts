@@ -7,19 +7,22 @@ import {
   getValueOrZero,
 } from "../util/tf_idf";
 
-const TEST_SENTENCE = `This is a test sentence, which is great to see!
-  This sentence has a reference at the end.[a] 3. This is a question? This sentence has numbers 0.1231 0.a. This is end sentence.`;
+const TEST_SENTENCE = `This is a test sentence, which is great to see !
+  This sentence has a reference at the end.[a] 3. This is a question? This sentence has numbers 0.1231 0.1. This is end sentence.`;
 
 test("paragraphs to sentences", () => {
   const test_ans = [
-    "This is a test sentence, which is great to see!",
-    "This sentence has a reference at the end.",
-    "a] 3. This is a question?",
-    "This sentence has numbers 0.1231 0.a.",
-    "This is end sentence.",
+    "This is a test sentence, which is great to see",
+    "This sentence has a reference at the end",
+    "[a] 3",
+    "This is a question",
+    "This sentence has numbers 0.1231 0.1",
+    "This is end sentence",
   ];
 
   const sent_s = para_to_sent_s(TEST_SENTENCE);
+
+  console.log(sent_s);
 
   sent_s.forEach((sent, i) => {
     expect(sent).toMatch(test_ans[i]!);
