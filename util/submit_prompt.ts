@@ -121,6 +121,7 @@ export async function submitPrompt(data: Data) {
   };
 
   const assistant_answer = json.choices[0]?.message.content || "";
+  console.log("Assistant Answer", assistant_answer);
 
   data.hist.push({
     step: a_step,

@@ -25,7 +25,7 @@ export function compToModelPath({ os }: { os: OSType }): string | null {
     return null;
   }
 
-  let path = `llama-cpp/${LLAMA_CPP_VERSION}/${os}/`;
+  let path = `llama-cpp/`;
   const LLAMA_STEM = `llama-${LLAMA_CPP_VERSION}`;
   const UBUNTU_STEM = "-bin-ubuntu-";
   const WINDOWS_STEM = "-bin-win-";
