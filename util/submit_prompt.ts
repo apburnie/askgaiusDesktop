@@ -13,7 +13,7 @@ function buildUserContent(prompt: string): string {
   let summary = "";
   if (prompt.length > PROMPT_WINDOW) {
     const tfidf = doc_TFIDF(prompt);
-    summary = tfidf.getSummary(10);
+    summary = tfidf.getSummary(5);
   }
 
   let input = "";
@@ -37,7 +37,17 @@ async function buildSystemContent({
   id: number | null;
   tfidf: TFIDFType;
 }): Promise<string> {
-  const system_content = ["You are a helpful assistant called Gaius."];
+  const system_content = [
+    `
+    Your objective is to be a helpful assistant called Gaius.
+
+    Your constraint is that you follow these rules:
+    1. Accurate: Never fabricate information.  If unsure provide steps to guide the user in acquring the required information.
+    2. Concise: Provide clear, brief responses relevant to the prompt except where this oversimplifies a complex issue
+
+    Priority Order: Accuracy > Conciseness
+   `,
+  ];
 
   if (system_prompt_mode !== "BASE") {
     system_content.push(SYSTEM_PROMPT[system_prompt_mode]);
@@ -66,18 +76,6 @@ async function buildSystemContent({
 }
 
 export async function submitPrompt(data: Data) {
-  // const pathResp = await fetch("/model-path", {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  // const pathJSON = await pathResp.json();
-  //
-
-  // const { path } = pathJSON as { path: string };
-  //
   const path = "./model";
 
   console.log("using path", path);
@@ -128,7 +126,7 @@ export async function submitPrompt(data: Data) {
 
   const pipe = await pipeline(
     "text-generation",
-    "onnx-community/Qwen3.5-4B-ONNX",
+    "onnx-community/Qwen3.5-2B-ONNX",
     {
       dtype: "q4",
       device: "webgpu",
@@ -138,9 +136,9 @@ export async function submitPrompt(data: Data) {
   console.log("use pipeline");
   const output = await pipe(messages, {
     max_new_tokens: 1024,
-    temperature: 0.7,
+    temperature: 0.3,
     top_k: 20,
-    top_p: 0.8,
+    top_p: 0.5,
     tokenizer_encode_kwargs: {
       enable_thinking: false,
     },
@@ -148,7 +146,7 @@ export async function submitPrompt(data: Data) {
 
   const full_content = output[0]?.generated_text!;
 
-  const assistant_content = full_content[full_content?.length - 1]?.content;
+  const assistant_content = full_content[full_content?.length - 1]?.content!;
 
   data.hist.push({
     step: a_step,

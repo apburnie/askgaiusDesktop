@@ -1,10 +1,7 @@
-import { $ } from "bun";
 import Page from "./index.html";
 import { UI_PORT } from "./constant";
 import { deleteDataAPI, loadDataAPI, saveDataAPI } from "./util/server";
 import { loadClosestSummary } from "./util/server/memory";
-
-import { parseArgs } from "util";
 
 const server = Bun.serve({
   port: UI_PORT,
@@ -14,10 +11,6 @@ const server = Bun.serve({
     "/load-data": loadDataAPI,
     "/delete-data": deleteDataAPI,
     "/load-closest": loadClosestSummary,
-    "/model-path": async () => {
-      const path = values.modelPath;
-      return new Response(JSON.stringify({ path }));
-    },
     "/model/*": (req) => {
       const filePath = "./public/" + new URL(req.url).pathname;
       const file = Bun.file(filePath);
@@ -26,4 +19,4 @@ const server = Bun.serve({
   },
 });
 
-await $`open http://localhost:${UI_PORT}`;
+console.log("Please open your browser at http://localhost:2000");

@@ -1,12 +1,14 @@
 import { stemmer } from "stemmer";
 
 export function para_to_sent_s(para: string): string[] {
-  const re = new RegExp(
-    `(?:(?<=[a-z][.!?])|(?<=[a-z][.!?]['"]))(?<!Mr\.)(?<!Mrs\.)(?<!Jr\.)(?<!Dr\.)(?<!Prof\. )(?<!Sr\.)[^0-9a-zA-Z]+`,
-    "g",
-  );
+  const re = new RegExp(`[\.|!|?](?![0-9|a-z|A-Z])`, "g");
 
-  return para.split(re).map((sent) => sent.trim());
+  const proc = para
+    .split(re)
+    .map((sent) => sent.trim())
+    .filter((a) => a.length > 50);
+
+  return proc;
 }
 
 export function sent_to_word_s(sent: string): string[] {
