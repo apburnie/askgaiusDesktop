@@ -14,7 +14,6 @@ export async function submitPrompt() {
     "onnx-community/Qwen3.5-4B-ONNX",
     {
       dtype: "q4",
-      device: "cpu",
     },
   );
 

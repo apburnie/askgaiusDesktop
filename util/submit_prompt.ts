@@ -7,7 +7,7 @@ import { SYSTEM_PROMPT } from "./system_prompt";
 import { PROMPT_WINDOW } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 
-import { env, pipeline } from "@huggingface/transformers";
+import { CreateMLCEngine } from "@mlc-ai/web-llm";
 
 function buildUserContent(prompt: string): string {
   let summary = "";
@@ -76,15 +76,15 @@ async function buildSystemContent({
 }
 
 export async function submitPrompt(data: Data) {
-  const path = "./model";
-
-  console.log("using path", path);
-
-  env.localModelPath = path;
-  env.allowRemoteModels = false;
-  env.allowLocalModels = true;
-
   data.modelStatus = "PROCESSING";
+  const engine = await CreateMLCEngine(
+    "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC",
+    {
+      initProgressCallback: (progress) => {
+        data.headerText = `Model Loading: ${progress.text}`;
+      },
+    },
+  );
 
   const user_content = buildUserContent(data.prompt);
 
@@ -124,29 +124,12 @@ export async function submitPrompt(data: Data) {
 
   console.log("create pipeline");
 
-  const pipe = await pipeline(
-    "text-generation",
-    "onnx-community/Qwen3.5-2B-ONNX",
-    {
-      dtype: "q4",
-      device: "webgpu",
-    },
-  );
-
-  console.log("use pipeline");
-  const output = await pipe(messages, {
-    max_new_tokens: 1024,
-    temperature: 0.3,
-    top_k: 20,
-    top_p: 0.5,
-    tokenizer_encode_kwargs: {
-      enable_thinking: false,
-    },
+  const output = await engine.chat.completions.create({
+    messages,
   });
 
-  const full_content = output[0]?.generated_text!;
-
-  const assistant_content = full_content[full_content?.length - 1]?.content!;
+  const assistant_content = output.choices[0]?.message.content!;
+  console.log(assistant_content);
 
   data.hist.push({
     step: a_step,
