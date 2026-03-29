@@ -11,6 +11,7 @@
     "@mlc-ai/web-llm": "^0.2.82",
     "alpinejs": "^3.15.8",
     "dompurify": "^3.3.1",
+    "express": "^5.2.1",
     "marked": "^17.0.2",
     "stemmer": "^2.0.1",
     "turndown": "^7.2.2"
@@ -20,6 +21,7 @@
   },
   "private": true,
   "scripts": {
+    "build:browser": "bun build ./index.html --target=browser --outdir output",
     "build:linux:x64": "bun build ./server.ts --compile --target=bun-linux-x64-modern --outfile output/askGaius-linux-x64",
     "build:linux:arm64": "bun build ./server.ts --compile --target=bun-linux-arm64 --outfile output/askGaius-linux-arm64",
     "build:linux": "bun run build:linux:x64 && bun run build:linux:arm64",

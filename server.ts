@@ -1,22 +1,9 @@
-import Page from "./index.html";
-import { UI_PORT } from "./constant";
-import { deleteDataAPI, loadDataAPI, saveDataAPI } from "./util/server";
-import { loadClosestSummary } from "./util/server/memory";
+import express from "express";
+import path from "node:path";
+const app = express();
+const port = 8080;
+app.use("/", express.static(path.join(__dirname, "output")));
 
-const server = Bun.serve({
-  port: UI_PORT,
-  routes: {
-    "/": Page,
-    "/save-data": saveDataAPI,
-    "/load-data": loadDataAPI,
-    "/delete-data": deleteDataAPI,
-    "/load-closest": loadClosestSummary,
-    "/model/*": (req) => {
-      const filePath = "./public/" + new URL(req.url).pathname;
-      const file = Bun.file(filePath);
-      return new Response(file);
-    },
-  },
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
 });
-
-console.log("Please open your browser at http://localhost:2000");

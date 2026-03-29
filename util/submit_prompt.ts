@@ -5,9 +5,7 @@ import { type Data, type SystemPromptModeType, type TFIDFType } from "../type";
 import { doc_TFIDF } from "./tf_idf";
 import { SYSTEM_PROMPT } from "./system_prompt";
 import { PROMPT_WINDOW } from "../constant";
-import { buildMemory, getClosestSummary, saveConversation } from "./remember";
-
-import { CreateMLCEngine } from "@mlc-ai/web-llm";
+//import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 
 function buildUserContent(prompt: string): string {
   let summary = "";
@@ -56,7 +54,10 @@ async function buildSystemContent({
 
   console.log("submitted to get external brain", { id, tfidf });
 
-  const external_brain = await getClosestSummary({ id, tfidf });
+  // TO DO - add closest summary
+  //const external_brain = await getClosestSummary({ id, tfidf });
+
+  const external_brain = "";
 
   console.log("external brain", external_brain);
 
@@ -77,14 +78,29 @@ async function buildSystemContent({
 
 export async function submitPrompt(data: Data) {
   data.modelStatus = "PROCESSING";
-  const engine = await CreateMLCEngine(
-    "DeepSeek-R1-Distill-Qwen-7B-q4f16_1-MLC",
-    {
-      initProgressCallback: (progress) => {
-        data.headerText = `Model Loading: ${progress.text}`;
-      },
+  const { CreateMLCEngine, prebuiltAppConfig } =
+    await import("@mlc-ai/web-llm");
+
+  console.log(prebuiltAppConfig);
+
+  const modelPath = new URL("./model/DeepSeek", window.location.origin).href;
+  const modelLib = new URL(
+    "./model/Qwen2-7B-Instruct-q4f16_1-ctx4k_cs1k-webgpu.wasm",
+    window.location.origin,
+  ).href;
+
+  const model = {
+    model: modelPath,
+    model_id: "DeepSeek",
+    model_lib: modelLib,
+  };
+
+  const engine = await CreateMLCEngine(model.model_id, {
+    appConfig: { model_list: [model] },
+    initProgressCallback: (progress) => {
+      data.headerText = `Model Loading: ${progress.text}`;
     },
-  );
+  });
 
   const user_content = buildUserContent(data.prompt);
 
@@ -103,7 +119,8 @@ export async function submitPrompt(data: Data) {
     ...user_prompt,
   });
 
-  await buildMemory(data);
+  // TO DO - add back memory
+  //await buildMemory(data);
   data.prompt = "";
 
   // Create System Prompt
@@ -138,9 +155,9 @@ export async function submitPrompt(data: Data) {
     convert_content: Dompurify.sanitize(parse(assistant_content)),
   });
 
-  // Remember the answer
-  await buildMemory(data);
-  await saveConversation(data);
+  // TO DO - Remember the answer
+  // await buildMemory(data);
+  //await saveConversation(data);
 
   data.modelStatus = "LOADED";
 }
