@@ -1,3 +1,4 @@
+import { MIMIR_PATH } from "../../constant";
 import { type SaveDataSet, type SentSaveDataItem } from "../../type";
 import { loadData } from "./load";
 
@@ -86,9 +87,8 @@ async function handleIsDataCase(
   }
 }
 
-export async function saveDataAPI(req: Bun.BunRequest) {
+export async function saveDataAPI(saveData: SentSaveDataItem) {
   console.log("saving data");
-  const saveData = (await req.json()) as SentSaveDataItem;
 
   let res: ProcessReturnResult;
 
@@ -100,9 +100,6 @@ export async function saveDataAPI(req: Bun.BunRequest) {
     res = await handleIsDataCase(oldData, saveData);
   }
 
-  await Bun.write(
-    "./brain/interact/interact.json",
-    JSON.stringify(res.storedData),
-  );
-  return new Response(JSON.stringify({ id: res.saveID }));
+  await Bun.write(MIMIR_PATH, JSON.stringify(res.storedData));
+  return { id: res.saveID };
 }

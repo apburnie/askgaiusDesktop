@@ -1,17 +1,28 @@
 export type PageType = "HOME" | "CONVERSE" | "CONTINUE" | "DELETE";
 export type ModelStatusType = "UNLOADED" | "LOADED" | "PROCESSING";
-export type SystemPromptModeType = "BASE" | "PROMPT_TRAINER";
+export type SystemPromptModeType =
+  | "BASE"
+  | "PROMPT_TRAINER"
+  | "GOLDFISH"
+  | "WEBSEARCH";
 export type ConverseSubPageType = "CONVERSE" | "SETTING";
 export type OSType = "UBUNTU" | "WINDOWS" | "unsupported";
 
 export type TFIDFType = Record<string, number>;
 
-export type HistType = {
-  step: number;
+export type Message = {
   role: string;
   content: string;
+};
+
+interface OneHist extends Message {
+  step: number;
   convert_content: string;
-}[];
+  convert_thought: string;
+}
+
+export type HistType = OneHist[];
+export type MessageS = Message[];
 
 export interface ConversationData {
   currentID: null | number;
@@ -28,6 +39,8 @@ interface UIData {
   prompt: string;
   systemPromptMode: SystemPromptModeType;
   converseSubPage: ConverseSubPageType;
+  runAns: string | null;
+  killStream: boolean;
 }
 
 interface CacheData {

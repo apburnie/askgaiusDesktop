@@ -5,8 +5,10 @@ export const PROMPT_WINDOW = 500;
 
 export const DEFAULT_DATA: ConversationData = {
   currentID: null,
-  headerText: "",
+  headerText: "Welcome to AskGaius",
   hist: [],
   brain: "",
   tfidf: {},
 };
+
+export const MIMIR_PATH = "./output/mimir/mimir.json";

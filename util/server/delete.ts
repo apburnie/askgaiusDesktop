@@ -1,9 +1,10 @@
+import { MIMIR_PATH } from "../../constant";
+
 import type { SaveDataSet } from "../../type";
 import { loadData } from "./load";
 
-export async function deleteDataAPI(req: Bun.BunRequest) {
+export async function deleteDataAPI(reqJSON: { id: number }) {
   console.log("saving data");
-  const reqJSON = (await req.json()) as { id: number };
 
   const oldData = await loadData();
 
@@ -14,6 +15,6 @@ export async function deleteDataAPI(req: Bun.BunRequest) {
     conversationS: oldData.conversationS.filter(({ id }) => id !== reqJSON.id),
   };
 
-  await Bun.write("./brain/interact/interact.json", JSON.stringify(newData));
-  return new Response(JSON.stringify({ status: "success" }));
+  await Bun.write(MIMIR_PATH, JSON.stringify(newData));
+  return { status: "success" };
 }

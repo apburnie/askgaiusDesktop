@@ -1,4 +1,4 @@
-import { GaiusMessage } from "../atom";
+import { GaiusMessage, GaiusButton } from "../atom";
 
 export default function ChatHist() {
   return `
@@ -8,9 +8,24 @@ export default function ChatHist() {
       ${GaiusMessage({ tone: "Yes", text: "Type a prompt in the box below to start a new chat" })}
       </div>
     </template>
+
     <template x-for="item in hist" :key="item.step">
+    <div>
+    <details x-show="item.convert_thought">
+      <summary>
+      Thinking
+      </summary>
+      <gaius-message :class="'Maybe'" ><div x-html="item.convert_thought"></div></gaius-message>
+    </details>
     <gaius-message :class="item.role === 'user' ? 'user' : 'assistant'" ><div x-html="item.convert_content"></div></gaius-message>
+    </div>
     </template>
+
+
+    <gaius-message :class="'assistant'" >
+    <div x-text="runAns"></div>
+    </gaius-message>
+
 
     <div x-show="modelStatus === 'UNLOADED'" style="margin: auto; display: flex; justify-content: center; font-weight: 700">
       ${GaiusMessage({ tone: "Loading", text: "Model Loading" })}
@@ -19,6 +34,11 @@ export default function ChatHist() {
     <div x-show="modelStatus === 'PROCESSING'" style="margin: auto; display: flex; justify-content: center; font-weight: 700">
       ${GaiusMessage({ tone: "Loading", text: "Processing Prompt" })}
     </div>
+
+    <gaius-message x-show="modelStatus === 'PROCESSING'">
+    ${GaiusButton({ colour: "red", text: "Stop text generation", func: "() => {$data.killStream = true}" })}
+    </gaius-message>
+
 
   </chat-hist>
   `;

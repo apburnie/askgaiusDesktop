@@ -12,6 +12,14 @@ export default function SendPrompt() {
                 <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}" })}</div>
                 <div>Prompt Trainer</div>
                </system-prompt-mode>
+               <system-prompt-mode x-show="systemPromptMode === 'GOLDFISH'">
+                 <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}" })}</div>
+                 <div>🐠 No Memory Goldfish Mode</div>
+                </system-prompt-mode>
+                <system-prompt-mode x-show="systemPromptMode === 'WEBSEARCH'">
+                  <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}" })}</div>
+                  <div>🌍 Share Prompt with the Internet</div>
+                 </system-prompt-mode>
             </system-prompt-container>
             ${aC}
           </send-prompt>`;

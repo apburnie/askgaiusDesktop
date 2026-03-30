@@ -2,16 +2,14 @@ import type { TFIDFType } from "../../type";
 import { cosineSimilarity } from "../tf_idf";
 import { loadAll } from "./load";
 
-export async function loadClosestSummary(req: Bun.BunRequest) {
-  const internal_brain = (await req.json()) as {
-    id: number | null;
-    tfidf: TFIDFType;
-  };
-
+export async function loadClosestSummary(internal_brain: {
+  id: number | null;
+  tfidf: TFIDFType;
+}): Promise<{ closestExternal: string }> {
   const brain = await loadAll();
 
   if (brain.length === 0) {
-    return new Response(JSON.stringify({ closestExternal: "" }));
+    return { closestExternal: "" };
   }
 
   let max_cs = -100;
@@ -32,11 +30,11 @@ export async function loadClosestSummary(req: Bun.BunRequest) {
     }
   }
   let closestExternal;
-  if (max_cs <= 0.5) {
+  if (max_cs <= 0) {
     closestExternal = "";
   } else {
-    closestExternal = brain[max_index]?.brain;
+    closestExternal = brain[max_index]?.brain || "";
   }
 
-  return new Response(JSON.stringify({ closestExternal }));
+  return { closestExternal };
 }

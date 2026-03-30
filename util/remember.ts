@@ -1,6 +1,4 @@
-import { DEFAULT_DATA } from "../constant";
 import {
-  type ConversationData,
   type Data,
   type SentSaveDataItem,
   type StoredSaveDataItem,
@@ -27,7 +25,7 @@ export async function saveConversation(data: Data) {
     tfidf: data.tfidf,
   };
 
-  const saveResp = await fetch("/save-data", {
+  const saveResp = await fetch("/api/save-data", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +39,7 @@ export async function saveConversation(data: Data) {
 }
 
 export async function deleteByID(searchID: number, data: Data) {
-  const saveResp = await fetch("/delete-data", {
+  const saveResp = await fetch("/api/delete-data", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,13 +49,15 @@ export async function deleteByID(searchID: number, data: Data) {
 
   const loadJSON = (await saveResp.json()) as { status: string };
 
+  await loadConversation_s(data);
+
   if (loadJSON.status === "success") {
     data.page = "HOME";
   }
 }
 
 export async function loadConversation_s(data: Data) {
-  const saveResp = await fetch("/load-data", {
+  const saveResp = await fetch("/api/load-data", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -65,7 +65,6 @@ export async function loadConversation_s(data: Data) {
   });
 
   const loadJSON = (await saveResp.json()) as { data: StoredSaveDataItem[] };
-
   data.loadMeta = loadJSON.data;
 }
 
@@ -86,11 +85,12 @@ export async function switchForID(meta: StoredSaveDataItem, data: Data) {
 }
 
 export function startNewSession(data: Data) {
-  const key_s = Object.keys(DEFAULT_DATA);
+  data.hist = [];
+  data.currentID = null;
+  data.headerText = "";
+  data.brain = "";
+  data.tfidf = {};
 
-  key_s.forEach((key) => {
-    data[key] = DEFAULT_DATA[key];
-  });
   data.page = "CONVERSE";
 }
 
@@ -101,7 +101,7 @@ export async function getClosestSummary({
   id: number | null;
   tfidf: TFIDFType;
 }) {
-  const resp = await fetch("/load-closest", {
+  const resp = await fetch("/api/load-closest", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -109,7 +109,9 @@ export async function getClosestSummary({
     body: JSON.stringify({ id, tfidf }),
   });
 
-  const { closestExternal } = (await resp.json()) as {
+  const respJSON = await resp.json();
+
+  const { closestExternal } = respJSON as {
     closestExternal: string;
   };
 

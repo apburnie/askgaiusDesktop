@@ -4,7 +4,9 @@ import { Home, Converse, Continue, Delete } from "./component/page";
 
 import { type Data } from "./type";
 import {
+  activateGoldfish,
   activatePromptTrainer,
+  activateWebSearch,
   buildMemory,
   deleteByID,
   loadConversation_s,
@@ -27,6 +29,8 @@ const data: () => Data = () => ({
   systemPromptMode: "BASE",
   converseSubPage: "CONVERSE",
   loadMeta: [],
+  runAns: null,
+  killStream: false,
   func_s: {
     buildMemory,
     saveConversation,
@@ -38,6 +42,8 @@ const data: () => Data = () => ({
     deleteByID,
     printHist,
     parsePDF,
+    activateGoldfish,
+    activateWebSearch,
   },
 });
 

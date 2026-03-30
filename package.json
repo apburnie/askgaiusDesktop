@@ -4,6 +4,7 @@
   "devDependencies": {
     "@types/alpinejs": "^3.13.11",
     "@types/bun": "^1.3.10",
+    "@types/express": "^5.0.6",
     "vite": "^7.3.1",
     "vite-plugin-singlefile": "^2.3.0"
   },
@@ -21,6 +22,7 @@
   },
   "private": true,
   "scripts": {
+    "dev": "bun run build:browser && bun run server.ts",
     "build:browser": "bun build ./index.html --target=browser --outdir output",
     "build:linux:x64": "bun build ./server.ts --compile --target=bun-linux-x64-modern --outfile output/askGaius-linux-x64",
     "build:linux:arm64": "bun build ./server.ts --compile --target=bun-linux-arm64 --outfile output/askGaius-linux-arm64",

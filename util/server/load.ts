@@ -1,7 +1,8 @@
+import { MIMIR_PATH } from "../../constant";
 import type { SaveDataSet, StoredSaveDataItem } from "../../type";
 
 export async function loadData(): Promise<false | SaveDataSet> {
-  const file = Bun.file("./brain/interact/interact.json");
+  const file = Bun.file(MIMIR_PATH);
   const fileExists = await file.exists();
 
   if (fileExists) {
@@ -23,5 +24,5 @@ export async function loadAll(): Promise<StoredSaveDataItem[]> {
 
 export async function loadDataAPI() {
   const rest = await loadAll();
-  return new Response(JSON.stringify({ data: rest }));
+  return { data: rest };
 }
