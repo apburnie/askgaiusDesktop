@@ -13,11 +13,11 @@ import { PROMPT_WINDOW } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 import { getInternetData } from "./websearch";
 
-function buildUserContent(prompt: string): string {
+export function summariseContent(prompt: string): string {
   let summary = "";
   if (prompt.length > PROMPT_WINDOW) {
     const tfidf = doc_TFIDF(prompt);
-    summary = tfidf.getSummary(5);
+    summary = tfidf.getSummary(10);
   }
 
   let input = "";
@@ -35,13 +35,13 @@ async function buildSystemContent({
   system_prompt_mode,
   id,
   tfidf,
-  data,
+  prompt,
 }: {
   internal_brain: string;
   system_prompt_mode: SystemPromptModeType;
   id: number | null;
   tfidf: TFIDFType;
-  data: Data;
+  prompt: string;
 }): Promise<string> {
   console.log("SPM", system_prompt_mode);
 
@@ -82,8 +82,7 @@ async function buildSystemContent({
     }
 
     if (system_prompt_mode === "WEBSEARCH") {
-      data.headerText = "Pulling data from Wikipedia";
-      const wikiText = await getInternetData({ data });
+      const wikiText = await getInternetData({ prompt });
 
       system_content.push("Here is some data on the topic from Wikipedia:\n");
       system_content.push(wikiText + "\n");
@@ -102,7 +101,7 @@ export async function processPrompt({
   data,
 }: {
   messages: MessageS;
-  data: Data;
+  data?: Data;
 }) {
   const modelPath = new URL("./model/Qwen3", window.location.origin).href;
   const modelLib = new URL(
@@ -121,7 +120,9 @@ export async function processPrompt({
   const engine = await CreateMLCEngine(model.model_id, {
     appConfig: { model_list: [model] },
     initProgressCallback: (progress) => {
-      data.headerText = `Model Loading: ${progress.text}`;
+      if (data !== undefined) {
+        data.headerText = `Model Loading: ${progress.text}`;
+      }
     },
   });
 
@@ -151,7 +152,7 @@ export async function submitPrompt(data: Data) {
   // };
   //
 
-  const user_content = buildUserContent(data.prompt);
+  const user_content = summariseContent(data.prompt);
 
   // Update history for user prompt
   const u_step = data.hist.length;
@@ -168,6 +169,8 @@ export async function submitPrompt(data: Data) {
   });
 
   await buildMemory(data);
+  const prompt = data.prompt;
+
   data.prompt = "";
 
   // Create System Prompt
@@ -176,7 +179,7 @@ export async function submitPrompt(data: Data) {
     system_prompt_mode: data.systemPromptMode,
     id: data.currentID,
     tfidf: data.tfidf,
-    data,
+    prompt,
   });
 
   const first_hist = {

@@ -1,5 +1,4 @@
-import { Data } from "../type";
-import { processPrompt } from "./submit_prompt";
+import { processPrompt, summariseContent } from "./submit_prompt";
 import type { ChatCompletion, ChatCompletionChunk } from "@mlc-ai/web-llm";
 
 function prepPromptForWikipedia(prompt: string): string {
@@ -23,17 +22,22 @@ async function buildAns({
   for await (const chunk of output) {
     runAns += chunk.choices[0]?.delta.content || "";
   }
+  console.log(runAns);
   const thought_result = runAns.slice(runAns.indexOf("</think>") + 8);
 
   return thought_result;
 }
 
-async function prepForWikipedia({ data }: { data: Data }): Promise<string> {
-  const input = prepPromptForWikipedia(data.prompt);
+async function prepForWikipedia({
+  prompt,
+}: {
+  prompt: string;
+}): Promise<string> {
+  console.log("prompt received", prompt);
+  const input = prepPromptForWikipedia(prompt);
 
   const output = await processPrompt({
     messages: [{ role: "user", content: input }],
-    data,
   });
 
   const wikiTitle = buildAns({ output });
@@ -42,14 +46,11 @@ async function prepForWikipedia({ data }: { data: Data }): Promise<string> {
 }
 
 export async function getInternetData({
-  data,
+  prompt,
 }: {
-  data: Data;
+  prompt: string;
 }): Promise<string> {
-  data.headerText = "Fine-tuning Web Search";
-  const wikiTitle = await prepForWikipedia({ data });
-
-  data.headerText = "Conducting Web Search";
+  const wikiTitle = await prepForWikipedia({ prompt });
   const saveResp = await fetch("/api/ask-wikipedia", {
     method: "POST",
     headers: {
@@ -60,5 +61,7 @@ export async function getInternetData({
 
   const { content } = (await saveResp.json()) as { content: string };
 
-  return content;
+  const sum_content = summariseContent(content);
+
+  return sum_content;
 }

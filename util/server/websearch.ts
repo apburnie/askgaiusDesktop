@@ -1,6 +1,7 @@
-export async function getArticleFromWikipediaAPI(title: string) {
+export async function getArticleFromWikipediaAPI({ title }: { title: string }) {
+  console.log("received wikititle", title);
   const wikiResp = await fetch(
-    `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exlimit=1&titles=${title}&explaintext=1&exsectionformat=plain&format=json`,
+    `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exlimit=1&titles=${title.trim()}&explaintext=1&exsectionformat=plain&format=json`,
     {
       method: "GET",
       headers: {
