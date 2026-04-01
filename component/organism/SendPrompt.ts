@@ -9,16 +9,16 @@ export default function SendPrompt() {
             <system-prompt-container >
               ${gta}
               <system-prompt-mode x-show="systemPromptMode === 'PROMPT_TRAINER'">
-                <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}" })}</div>
-                <div>Prompt Trainer</div>
+                <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}", attr: { style: "height:100%" } })}</div>
+                <div>🎓 Prompt Trainer</div>
                </system-prompt-mode>
                <system-prompt-mode x-show="systemPromptMode === 'GOLDFISH'">
-                 <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}" })}</div>
-                 <div>🐠 No Memory Goldfish Mode</div>
+                 <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}", attr: { style: "height:100%" } })}</div>
+                 <div>🐠 No Memory Mode</div>
                 </system-prompt-mode>
                 <system-prompt-mode x-show="systemPromptMode === 'WEBSEARCH'">
-                  <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}" })}</div>
-                  <div>🌍 Share Prompt with the Internet</div>
+                  <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}", attr: { style: "height:100%" } })}</div>
+                  <div>🌍 Search the Internet</div>
                  </system-prompt-mode>
             </system-prompt-container>
             ${aC}

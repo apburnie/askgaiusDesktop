@@ -13,7 +13,11 @@ import { PROMPT_WINDOW } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 import { getInternetData } from "./websearch";
 
-export function summariseContent(prompt: string): string {
+export function summariseContent(prompt?: string): string {
+  if (!prompt) {
+    return "";
+  }
+
   let summary = "";
   if (prompt.length > PROMPT_WINDOW) {
     const tfidf = doc_TFIDF(prompt);
@@ -83,9 +87,10 @@ async function buildSystemContent({
 
     if (system_prompt_mode === "WEBSEARCH") {
       const wikiText = await getInternetData({ prompt });
-
-      system_content.push("Here is some data on the topic from Wikipedia:\n");
-      system_content.push(wikiText + "\n");
+      if (wikiText.trim() !== "") {
+        system_content.push("Here is some data on the topic from Wikipedia:\n");
+        system_content.push(wikiText + "\n");
+      }
     }
 
     if (external_brain !== "" || internal_brain !== "") {
