@@ -1,9 +1,15 @@
 import Turndownservice from "turndown";
+import { findClosestStringToQuery } from "../tf_idf";
 
-export async function getArticleFromWikipediaAPI({ title }: { title: string }) {
+export async function getArticleFromWikipediaAPI({
+  title,
+  prompt,
+}: {
+  title: string;
+  prompt: string;
+}) {
   console.log("received wikititle", title);
-
-  console.log("first search Wikipedia");
+  console.log("received prompt", prompt);
 
   const wikiSearchParam = new URLSearchParams();
   wikiSearchParam.append("action", "query");
@@ -52,7 +58,10 @@ export async function getArticleFromWikipediaAPI({ title }: { title: string }) {
   turndown.remove(["a"]);
   const extra_content = turndown.turndown(text);
 
-  console.log("SNIPPET", snippet);
-  console.log("DDG gave", extra_content);
-  return { content: snippet + extra_content };
+  const { getSummary } = findClosestStringToQuery(
+    prompt,
+    snippet + extra_content,
+  );
+
+  return { content: getSummary(10) };
 }

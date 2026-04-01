@@ -33,7 +33,6 @@ async function prepForWikipedia({
 }: {
   prompt: string;
 }): Promise<string> {
-  console.log("prompt received", prompt);
   const input = prepPromptForWikipedia(prompt);
 
   const output = await processPrompt({
@@ -56,12 +55,10 @@ export async function getInternetData({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title: wikiTitle }),
+    body: JSON.stringify({ title: wikiTitle, prompt }),
   });
 
   const { content } = (await saveResp.json()) as { content: string };
 
-  const sum_content = summariseContent(content);
-
-  return sum_content;
+  return content;
 }
