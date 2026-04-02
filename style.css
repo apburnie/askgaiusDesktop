@@ -49,11 +49,17 @@ header {
     background: var(--gaius-light-grey);
     border-bottom: 2px solid var(--gaius-light-grey-2);
     height: 5svh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 header h1 {
     margin: 0;
     width: 100%;
     text-align: center;
+    font-size: 1rem;
+    overflow: hidden;
 }
 
 main {
