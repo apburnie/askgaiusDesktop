@@ -4,7 +4,7 @@ import Dompurify from "dompurify";
 import { type Data, type MessageS } from "../type";
 import { doc_TFIDF } from "./tf_idf";
 import { SYSTEM_PROMPT } from "./system_prompt";
-import { PROMPT_WINDOW } from "../constant";
+import { MODEL_PATH, PROMPT_WINDOW } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 import { getInternetData } from "./websearch";
 
@@ -98,9 +98,9 @@ export async function processPrompt({
   messages: MessageS;
   data?: Data;
 }) {
-  const modelPath = new URL("./model/Qwen3", window.location.origin).href;
+  const modelPath = new URL(MODEL_PATH, window.location.origin).href;
   const modelLib = new URL(
-    "./model/Qwen3/Qwen3-4B-q4f16_1-ctx4k_cs1k-webgpu.wasm",
+    `${MODEL_PATH}/Qwen3-4B-q4f16_1-ctx4k_cs1k-webgpu.wasm`,
     window.location.origin,
   ).href;
 

@@ -12,3 +12,4 @@ export const DEFAULT_DATA: ConversationData = {
 };
 
 export const MIMIR_PATH = "./output/mimir/mimir.json";
+export const MODEL_PATH = "../model/Qwen3";
