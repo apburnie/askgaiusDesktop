@@ -88,6 +88,7 @@ export function sent_to_tf_wordCount_s(sent_s: string[]): {
   text: string;
   wordToCount: Record<string, number>;
   tf: Record<string, number>;
+  totalWord: number;
 }[] {
   return sent_s.map((sent) => {
     const word_s = sent_to_word_s(sent);
@@ -99,7 +100,7 @@ export function sent_to_tf_wordCount_s(sent_s: string[]): {
     const tf = Object.fromEntries(
       Object.entries(wordToCount).map(([stem, count]) => [
         stem,
-        count / (count + 1.2 * (1 - 0.75 + (0.75 * totalWord) / 20)),
+        count / (count + 1.2 * (0.25 + (0.75 * totalWord) / 20)),
       ]),
     );
 
@@ -107,6 +108,7 @@ export function sent_to_tf_wordCount_s(sent_s: string[]): {
       text: sent,
       wordToCount,
       tf,
+      totalWord,
     };
   });
 }
@@ -168,14 +170,14 @@ function calcSentTFIDF_n_docIDF_s(
 
   const doc_idf = doc_count_s_to_idf_s(doc_word_count, no_of_doc);
 
-  const sent_tf_idf_s = sent_tf_wordCount_s.map(({ tf, text }) => {
+  const sent_tf_idf_s = sent_tf_wordCount_s.map(({ tf, text, totalWord }) => {
     const tfidf = Object.fromEntries(
       Object.entries(tf).map(([stem, word_tf]) => {
-        return [stem, word_tf - doc_idf[stem]!];
+        return [stem, word_tf * doc_idf[stem]!];
       }),
     );
 
-    return { tfidf, text };
+    return { tfidf, text, totalWord };
   });
 
   return { sent_tf_idf_s, doc_idf };
@@ -201,24 +203,39 @@ function calcClosest({
   sent_tf_idf_s,
   comparison,
 }: {
-  sent_tf_idf_s: { tfidf: Record<string, number>; text: string }[];
+  sent_tf_idf_s: {
+    tfidf: Record<string, number>;
+    text: string;
+    totalWord: number;
+  }[];
   comparison: Record<string, number>;
 }) {
-  const sent_score_s = sent_tf_idf_s.map(({ text, tfidf }) => {
+  const sent_score_s = sent_tf_idf_s.map(({ text, tfidf, totalWord }) => {
     const score = cosineSimilarity(tfidf, comparison);
 
     return {
       text,
       score,
+      totalWord,
     };
   });
 
-  function getSummary(numSentence: number) {
-    return sent_score_s
-      .sort((a, b) => b.score - a.score)
-      .slice(0, numSentence)
-      .map((entry) => entry.text)
-      .join(". ");
+  function getSummary(budget: number) {
+    const sort_scores = sent_score_s.sort((a, b) => b.score - a.score);
+
+    let summary = "";
+    let wordCount = 0;
+    let index = 0;
+
+    while (wordCount < budget) {
+      const new_sent = sort_scores[index];
+      if (!new_sent) break;
+      wordCount += new_sent.totalWord;
+      summary += new_sent.text + ". ";
+      index++;
+    }
+
+    return summary;
   }
 
   return getSummary;

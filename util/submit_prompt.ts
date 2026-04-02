@@ -1,12 +1,7 @@
 import { parse } from "marked";
 import Dompurify from "dompurify";
 
-import {
-  type Data,
-  type MessageS,
-  type SystemPromptModeType,
-  type TFIDFType,
-} from "../type";
+import { type Data, type MessageS } from "../type";
 import { doc_TFIDF } from "./tf_idf";
 import { SYSTEM_PROMPT } from "./system_prompt";
 import { PROMPT_WINDOW } from "../constant";
@@ -21,7 +16,7 @@ export function summariseContent(prompt?: string): string {
   let summary = "";
   if (prompt.length > PROMPT_WINDOW) {
     const tfidf = doc_TFIDF(prompt);
-    summary = tfidf.getSummary(10);
+    summary = tfidf.getSummary(100);
   }
 
   let input = "";
@@ -34,39 +29,33 @@ export function summariseContent(prompt?: string): string {
   return input;
 }
 
-async function buildSystemContent({
-  internal_brain,
-  system_prompt_mode,
-  id,
-  tfidf,
-  prompt,
-}: {
-  internal_brain: string;
-  system_prompt_mode: SystemPromptModeType;
-  id: number | null;
-  tfidf: TFIDFType;
-  prompt: string;
-}): Promise<string> {
-  console.log("SPM", system_prompt_mode);
+async function buildSystemContent(data: Data): Promise<string> {
+  const {
+    systemPromptMode,
+    brain: internal_brain,
+    currentID: id,
+    tfidf,
+  } = data;
+  console.log("SPM", systemPromptMode);
 
   let mode: keyof typeof SYSTEM_PROMPT = "BASE";
 
-  if (["GOLDFISH", "BASE", "WEBSEARCH"].includes(system_prompt_mode)) {
+  if (["GOLDFISH", "BASE", "WEBSEARCH"].includes(systemPromptMode)) {
     mode = "BASE";
   } else {
-    mode = system_prompt_mode as "PROMPT_TRAINER";
+    mode = systemPromptMode as "PROMPT_TRAINER";
   }
 
   const system_content = [SYSTEM_PROMPT[mode]];
 
-  if (system_prompt_mode === "PROMPT_TRAINER") {
+  if (systemPromptMode === "PROMPT_TRAINER") {
     system_content.push(`
       Evaluate the following prompt:
 
       `);
   }
 
-  if (!["PROMPT_TRAINER", "GOLDFISH"].includes(system_prompt_mode)) {
+  if (!["PROMPT_TRAINER", "GOLDFISH"].includes(systemPromptMode)) {
     console.log("submitted to get external brain", { id, tfidf });
 
     const external_brain = await getClosestSummary({ id, tfidf });
@@ -85,8 +74,9 @@ async function buildSystemContent({
       system_content.push(internal_brain);
     }
 
-    if (system_prompt_mode === "WEBSEARCH") {
-      const wikiText = await getInternetData({ prompt });
+    if (systemPromptMode === "WEBSEARCH") {
+      data.headerText = "Preparing Web Search...";
+      const wikiText = await getInternetData(data);
       if (wikiText.trim() !== "") {
         system_content.push("Here is some data on the topic from Wikipedia:\n");
         system_content.push(wikiText + "\n");
@@ -179,13 +169,7 @@ export async function submitPrompt(data: Data) {
   data.prompt = "";
 
   // Create System Prompt
-  const system_content = await buildSystemContent({
-    internal_brain: data.brain,
-    system_prompt_mode: data.systemPromptMode,
-    id: data.currentID,
-    tfidf: data.tfidf,
-    prompt,
-  });
+  const system_content = await buildSystemContent(data);
 
   const first_hist = {
     role: "system",
