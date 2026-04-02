@@ -1,4 +1,5 @@
 import { type Data } from "../type";
+import { loadConversation_s } from "./remember";
 
 export function activatePromptTrainer(data: Data) {
   data.systemPromptMode = "PROMPT_TRAINER";
@@ -13,4 +14,11 @@ export function activateGoldfish(data: Data) {
 export function activateWebSearch(data: Data) {
   data.systemPromptMode = "WEBSEARCH";
   data.converseSubPage = "CONVERSE";
+}
+
+export async function goToHomePage(data: Data) {
+  await loadConversation_s(data);
+  data.converseSubPage = "CONVERSE";
+  data.headerText = "Welcome to AskGaius";
+  data.page = "HOME";
 }

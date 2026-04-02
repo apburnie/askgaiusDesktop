@@ -9,6 +9,7 @@ import {
   activateWebSearch,
   buildMemory,
   deleteByID,
+  goToHomePage,
   loadConversation_s,
   saveConversation,
   startNewSession,
@@ -44,6 +45,7 @@ const data: () => Data = () => ({
     parsePDF,
     activateGoldfish,
     activateWebSearch,
+    goToHomePage,
   },
 });
 

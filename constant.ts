@@ -11,5 +11,10 @@ export const DEFAULT_DATA: ConversationData = {
   tfidf: {},
 };
 
-export const MIMIR_PATH = "./output/mimir/mimir.json";
+// Version for local testing:
+//export const MIMIR_PATH = "./output/mimir/mimir.json";
+
+// Version for production:
+export const MIMIR_PATH = "../mimir/mimir.json";
+
 export const MODEL_PATH = "./model/Qwen3";

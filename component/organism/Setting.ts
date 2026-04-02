@@ -12,7 +12,7 @@ export default function Setting() {
       <input id="pdfUpload" type="file" x-ref="file" @change="func_s.parsePDF($refs.file.files[0], $data)">
   </div>
   ${GaiusButton({ colour: "blue", text: "Back to Conversation", func: "() => {$data.converseSubPage = 'CONVERSE'} " })}
-  ${GaiusButton({ colour: "blue", text: "🏛️ Home Page", func: "() => {page = 'HOME'; converseSubPage = 'CONVERSE', headerText = 'Welcome to AskGaius';} " })}
+  ${GaiusButton({ colour: "blue", text: "🏛️ Home Page", func: "() => func_s.goToHomePage($data)" })}
   </setting-container>
   `;
 }
