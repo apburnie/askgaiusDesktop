@@ -57,8 +57,6 @@ async function buildSystemContent(data: Data): Promise<string> {
   }
 
   if (!["PROMPT_TRAINER", "GOLDFISH"].includes(systemPromptMode)) {
-    console.log("submitted to get external brain", { id, tfidf });
-
     const external_brain = await getClosestSummary({ id, tfidf });
 
     if (external_brain !== "" || internal_brain !== "") {

@@ -2,7 +2,7 @@ import { stemmer } from "stemmer";
 
 export function para_to_sent_s(
   para: string,
-  min_string_len: boolean,
+  min_string_len?: boolean,
 ): string[] {
   const re = new RegExp(`[\.|!|?](?![0-9|a-z|A-Z])`, "g");
 
@@ -10,6 +10,8 @@ export function para_to_sent_s(
 
   if (min_string_len) {
     proc = proc.filter((a) => a.length > 50);
+  } else {
+    proc = proc.filter((a) => a.length > 0);
   }
 
   return proc;
@@ -65,9 +67,9 @@ export function cosineSimilarity(
   vecA: Record<string, number>,
   vecB: Record<string, number>,
 ) {
-  let dotProduct = 0,
-    magA = 0,
-    magB = 0;
+  let dotProduct = 0;
+  let magA = 0;
+  let magB = 0;
 
   let allWords = new Set([...Object.keys(vecA), ...Object.keys(vecB)]);
 
@@ -101,7 +103,7 @@ export function sent_to_tf_wordCount_s(sent_s: string[]): {
       Object.entries(wordToCount).map(([stem, count]) => [
         stem,
         // TF CALC
-        count / (count + 1.2 * (0.25 + (0.75 * totalWord) / 20)),
+        count / (count + 1.2 * (0.25 + 0.75 * (totalWord / 20))),
       ]),
     );
 
@@ -118,16 +120,16 @@ function doc_count_s_to_idf_s(
   doc_word_count: Record<string, number>,
   no_of_doc: number,
 ) {
-  const idf = Object.fromEntries(
+  return Object.fromEntries(
     Object.entries(doc_word_count).map(([stem, count]) => [
       stem,
       // IDF CALC
       Math.log((no_of_doc - count + 0.5) / (count + 0.5) + 1),
     ]),
   );
-
-  return idf;
 }
+
+// AM HERE IN CHECKTHROUGH
 
 export function findClosestStringToQuery(query: string, text: string) {
   const { sent_tf_idf_s } = calcSentTFIDF_n_docIDF_s(text, false, query);
