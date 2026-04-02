@@ -15,9 +15,10 @@ import {
   startNewSession,
   submitPrompt,
   switchForID,
+  parseHTML,
+  printHist,
 } from "./util";
 import { DEFAULT_DATA } from "./constant";
-import { parsePDF, printHist } from "./util/print";
 
 const main = `${Home()}${Continue()}${Delete()}${Converse()}`;
 
@@ -43,7 +44,7 @@ const data: () => Data = () => ({
     startNewSession,
     deleteByID,
     printHist,
-    parsePDF,
+    parseHTML,
     activateGoldfish,
     activateWebSearch,
     goToHomePage,

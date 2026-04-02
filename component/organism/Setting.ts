@@ -9,7 +9,7 @@ export default function Setting() {
   ${GaiusButton({ colour: "blue", text: "Print Conversation", func: "() => func_s.printHist($data)" })}
   <div>
   <label class="GaiusButton" for="pdfUpload">Upload HTML</label>
-      <input id="pdfUpload" type="file" x-ref="file" @change="func_s.parsePDF($refs.file.files[0], $data)">
+      <input id="pdfUpload" type="file" x-ref="file" @change="func_s.parseHTML($refs.file.files[0], $data)">
   </div>
   ${GaiusButton({ colour: "blue", text: "Back to Conversation", func: "() => {$data.converseSubPage = 'CONVERSE'} " })}
   ${GaiusButton({ colour: "blue", text: "🏛️ Home Page", func: "() => func_s.goToHomePage($data)" })}

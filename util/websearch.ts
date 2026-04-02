@@ -1,5 +1,4 @@
-import { processPrompt, summariseContent } from "./submit_prompt";
-import type { ChatCompletion, ChatCompletionChunk } from "@mlc-ai/web-llm";
+import { processPrompt, outputToAns } from "./submit_prompt";
 import { type Data } from "../type";
 
 function prepPromptForWikipedia(prompt: string): string {
@@ -12,25 +11,8 @@ function prepPromptForWikipedia(prompt: string): string {
 
   return input;
 }
-// TO DO - this processing must match that in submitPrompt
-async function buildAns({
-  data,
-  output,
-}: {
-  data: Data;
-  output: ChatCompletion & AsyncIterable<ChatCompletionChunk>;
-}): Promise<string> {
-  data.runAns = "";
 
-  for await (const chunk of output) {
-    data.runAns += chunk.choices[0]?.delta.content || "";
-  }
-  const thought_result = data.runAns.slice(data.runAns.indexOf("</think>") + 8);
-
-  return thought_result;
-}
-
-async function prepForWikipedia(data: Data): Promise<string> {
+async function prepForWikipedia(data: Data): Promise<string | null> {
   const input = prepPromptForWikipedia(data.prompt);
 
   const output = await processPrompt({
@@ -38,13 +20,26 @@ async function prepForWikipedia(data: Data): Promise<string> {
     data,
   });
 
-  const wikiTitle = buildAns({ data, output });
+  const { thought_result: wikiTitle, earlyExit } = await outputToAns(
+    data,
+    output,
+  );
+
+  if (earlyExit) {
+    return null;
+  }
 
   return wikiTitle;
 }
 
 export async function getInternetData(data: Data): Promise<string> {
   const wikiTitle = await prepForWikipedia(data);
+
+  if (wikiTitle === null) {
+    data.killStream = true;
+    return "";
+  }
+
   data.processText = `Searching for "${wikiTitle}"`;
   const saveResp = await fetch("/api/ask-wikipedia", {
     method: "POST",

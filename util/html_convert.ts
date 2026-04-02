@@ -2,8 +2,6 @@ import type { Data } from "../type";
 import Turndownservice from "turndown";
 
 export async function printHist(data: Data) {
-  console.log("print");
-
   const convert_content = data.hist.map(({ role, convert_content }) => {
     if (role === "user") {
       return `<user-content>${convert_content}</user-content>`;
@@ -44,10 +42,9 @@ export async function printHist(data: Data) {
   a.click();
 }
 
-export async function parsePDF(file: File, data: Data) {
+export async function parseHTML(file: File, data: Data) {
   const html_text = await file.text();
   const turndown = new Turndownservice();
   data.prompt = turndown.turndown(html_text).replace(/[\n]+/g, " ");
-  console.log("LONG PROMPT", data.prompt);
   data.converseSubPage = "CONVERSE";
 }

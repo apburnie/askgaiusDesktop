@@ -1,4 +1,4 @@
-import { MIMIR_PATH } from "../../constant";
+import { MIMIR_PATH } from "../../constant/server";
 import type { SaveDataSet, StoredSaveDataItem } from "../../type";
 
 export async function loadData(): Promise<false | SaveDataSet> {

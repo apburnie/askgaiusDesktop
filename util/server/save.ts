@@ -1,4 +1,4 @@
-import { MIMIR_PATH } from "../../constant";
+import { MIMIR_PATH } from "../../constant/server";
 import { type SaveDataSet, type SentSaveDataItem } from "../../type";
 import { loadData } from "./load";
 

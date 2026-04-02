@@ -8,9 +8,6 @@ export async function getArticleFromWikipediaAPI({
   title: string;
   prompt: string;
 }) {
-  console.log("received wikititle", title);
-  console.log("received prompt", prompt);
-
   const wikiSearchParam = new URLSearchParams();
   wikiSearchParam.append("action", "query");
   wikiSearchParam.append("list", "search");

@@ -23,7 +23,7 @@
   "private": true,
   "scripts": {
     "build:browser": "rm output/odin/index-* && rm output/odin/index.html && bun build ./index.html --target=browser --outdir output/odin",
-    "dev": "bun run build:browser && bun run server.ts",
+    "dev": "bun run build:browser && MODE=dev bun run server.ts",
     "build:linux:x64": "bun build ./server.ts --compile --target=bun-linux-x64-modern --outfile output/exe/askGaius-linux-x64",
     "build:linux:arm64": "bun build ./server.ts --compile --target=bun-linux-arm64 --outfile output/exe/askGaius-linux-arm64",
     "build:linux": "bun run build:linux:x64 && bun run build:linux:arm64",
@@ -33,7 +33,7 @@
     "build:macos:x64": "bun build ./server.ts --compile --target=bun-darwin-x64 --outfile output/exe/askGaius-macos-x64",
     "build:macos:arm64": "bun build ./server.ts --compile --target=bun-darwin-arm64 --outfile output/exe/askGaius-macos-arm64",
     "build:macos": "bun run build:macos:x64 && bun run build:macos:arm64",
-    "build": "bun run build:browser && bun run build:linux && bun run build:windows && bun run build:macos"
+    "build": "bun run build:browser && bun run build:linux && bun run build:windows && bun run build:macos && bun run generate_readme.ts"
   },
   "type": "module"
 }

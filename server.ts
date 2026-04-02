@@ -9,11 +9,12 @@ import {
 const app = express();
 const port = 8080;
 
-// Version for local testing:
-//app.use("/", express.static("./output/odin"));
-
-// Version for production:
-app.use("/", express.static("../odin"));
+if (process.env.MODE === "dev") {
+  app.use("/", express.static("./output/odin"));
+} else {
+  // Production mode
+  app.use("/", express.static("../odin"));
+}
 
 app.use("/api", express.json({ limit: "50mb" }));
 

@@ -7,6 +7,7 @@ import { SYSTEM_PROMPT } from "./system_prompt";
 import { MODEL_PATH, PROMPT_WINDOW } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 import { getInternetData } from "./websearch";
+import type { ChatCompletion, ChatCompletionChunk } from "@mlc-ai/web-llm";
 
 export function summariseContent(prompt?: string): string {
   if (!prompt) {
@@ -91,6 +92,43 @@ async function buildSystemContent(data: Data): Promise<string> {
   return system_content.join(" ");
 }
 
+export async function outputToAns(
+  data: Data,
+  output: ChatCompletion & AsyncIterable<ChatCompletionChunk>,
+): Promise<{ thought: string; thought_result: string; earlyExit: boolean }> {
+  let earlyExit = false;
+
+  data.runAns = "";
+
+  for await (const chunk of output) {
+    data.runAns += chunk.choices[0]?.delta.content || "";
+
+    if (data.killStream) {
+      data.killStream = false;
+      earlyExit = true;
+      break;
+    }
+  }
+
+  const thought_begin = data.runAns.indexOf("<think>") + 7;
+  const thought_end = data.runAns.indexOf("</think>");
+
+  let thought = data.runAns.slice(
+    thought_begin,
+    thought_end === -1 ? data.runAns.length : thought_end,
+  );
+
+  const thought_result = data.runAns.slice(data.runAns.indexOf("</think>") + 8);
+
+  if (thought === thought_result) {
+    thought = "";
+  }
+
+  data.runAns = null;
+
+  return { thought, thought_result, earlyExit };
+}
+
 export async function processPrompt({
   messages,
   data,
@@ -136,17 +174,6 @@ export async function processPrompt({
 
 export async function submitPrompt(data: Data) {
   data.modelStatus = "PROCESSING";
-
-  // TO DO - Switch model to Qwen 3.5 when it is available
-  // const model = {
-  //   model_id: "Qwen3-1.7B-q4f32_1-MLC",
-  // };
-  //
-  // const model = {
-  //   model_id: "Ministral-3-3B-Reasoning-2512-q4f16_1-MLC",
-  // };
-  //
-
   const user_content = summariseContent(data.prompt);
 
   // Update history for user prompt
@@ -164,7 +191,6 @@ export async function submitPrompt(data: Data) {
   });
 
   await buildMemory(data);
-  const prompt = data.prompt;
 
   // Create System Prompt
   const system_content = await buildSystemContent(data);
@@ -179,30 +205,25 @@ export async function submitPrompt(data: Data) {
   console.log("SYSTEM CONTENT", messages[0].content);
   console.log("USER CONTENT", messages[1].content);
 
+  if (data.killStream) {
+    data.killStream = false;
+    data.modelStatus = "LOADED";
+    data.hist.pop();
+    return;
+  }
+
   const output = await processPrompt({ messages, data });
 
-  data.runAns = "";
-
-  for await (const chunk of output) {
-    data.runAns += chunk.choices[0]?.delta.content || "";
-
-    if (data.killStream) {
-      data.killStream = false;
-      break;
-    }
-  }
-
-  let thought = data.runAns.slice(
-    data.runAns.indexOf("<think>") + 7,
-    data.runAns.indexOf("</think>"),
+  const { thought, thought_result, earlyExit } = await outputToAns(
+    data,
+    output,
   );
-  const thought_result = data.runAns.slice(data.runAns.indexOf("</think>") + 8);
 
-  if (thought === thought_result) {
-    thought = "";
+  if (earlyExit) {
+    data.modelStatus = "LOADED";
+    data.hist.pop();
+    return;
   }
-
-  data.runAns = null;
 
   data.hist.push({
     step: a_step,

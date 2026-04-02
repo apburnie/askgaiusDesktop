@@ -1,11 +1,9 @@
-import { MIMIR_PATH } from "../../constant";
+import { MIMIR_PATH } from "../../constant/server";
 
 import type { SaveDataSet } from "../../type";
 import { loadData } from "./load";
 
 export async function deleteDataAPI(reqJSON: { id: number }) {
-  console.log("saving data");
-
   const oldData = await loadData();
 
   if (!oldData) return new Response(JSON.stringify({ status: "fail" }));
