@@ -75,7 +75,7 @@ async function buildSystemContent(data: Data): Promise<string> {
     }
 
     if (systemPromptMode === "WEBSEARCH") {
-      data.headerText = "Preparing Web Search...";
+      data.processText = "Preparing Web Search...";
       const wikiText = await getInternetData(data);
       if (wikiText.trim() !== "") {
         system_content.push("Here is some data on the topic from Wikipedia:\n");
@@ -116,7 +116,7 @@ export async function processPrompt({
     appConfig: { model_list: [model] },
     initProgressCallback: (progress) => {
       if (data !== undefined) {
-        data.headerText = `Model Loading: ${progress.text}`;
+        data.processText = progress.text;
       }
     },
   });

@@ -31,7 +31,6 @@ async function buildAns({
 }
 
 async function prepForWikipedia(data: Data): Promise<string> {
-  console.log("prompt received", data.prompt);
   const input = prepPromptForWikipedia(data.prompt);
 
   const output = await processPrompt({
@@ -46,6 +45,7 @@ async function prepForWikipedia(data: Data): Promise<string> {
 
 export async function getInternetData(data: Data): Promise<string> {
   const wikiTitle = await prepForWikipedia(data);
+  data.processText = `Searching for "${wikiTitle}"`;
   const saveResp = await fetch("/api/ask-wikipedia", {
     method: "POST",
     headers: {

@@ -32,7 +32,9 @@ export default function ChatHist() {
     </div>
 
     <div x-show="modelStatus === 'PROCESSING'" style="margin: auto; display: flex; justify-content: center; font-weight: 700">
-      ${GaiusMessage({ tone: "Loading", text: "Processing Prompt" })}
+    <gaius-message :class="'Loading'" >
+    <div x-text="processText"></div>
+    </gaius-message>
     </div>
 
     <gaius-message x-show="modelStatus === 'PROCESSING'">

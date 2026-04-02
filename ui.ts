@@ -32,6 +32,7 @@ const data: () => Data = () => ({
   loadMeta: [],
   runAns: null,
   killStream: false,
+  processText: "Processing",
   func_s: {
     buildMemory,
     saveConversation,

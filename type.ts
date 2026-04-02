@@ -41,6 +41,7 @@ interface UIData {
   converseSubPage: ConverseSubPageType;
   runAns: string | null;
   killStream: boolean;
+  processText: string;
 }
 
 interface CacheData {
