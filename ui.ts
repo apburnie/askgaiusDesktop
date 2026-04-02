@@ -47,6 +47,15 @@ const data: () => Data = () => ({
     activateGoldfish,
     activateWebSearch,
     goToHomePage,
+    getHeaderText: (data: Data, length: number) => {
+      const text = data.headerText.replace(/[\s\n]+/g, " ");
+
+      if (text.length > length) {
+        return text.slice(0, length - 3) + "\u2026";
+      } else {
+        return text;
+      }
+    },
   },
 });
 

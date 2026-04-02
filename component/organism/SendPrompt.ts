@@ -22,5 +22,19 @@ export default function SendPrompt() {
                  </system-prompt-mode>
             </system-prompt-container>
             ${aC}
-          </send-prompt>`;
+          </send-prompt>
+
+
+              <gaius-message x-show="modelStatus === 'PROCESSING'">
+              ${GaiusButton({ colour: "red", text: "Stop text generation", func: "() => {$data.killStream = true}" })}
+              </gaius-message>
+
+              <div x-show="modelStatus === 'PROCESSING'" style="margin: auto; display: flex; justify-content: center; font-weight: 700">
+                  <gaius-message :class="'Loading'" >
+                  <div x-text="processText"></div>
+                  </gaius-message>
+                  </div>
+
+
+          `;
 }
