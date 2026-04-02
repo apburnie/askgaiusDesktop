@@ -46,5 +46,5 @@ app.post("/api/ask-wikipedia", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`listening on port ${port}`);
+  console.log(`Open the browser at http://localhost:${port}`);
 });

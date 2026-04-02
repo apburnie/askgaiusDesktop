@@ -88,8 +88,6 @@ async function handleIsDataCase(
 }
 
 export async function saveDataAPI(saveData: SentSaveDataItem) {
-  console.log("saving data");
-
   let res: ProcessReturnResult;
 
   const oldData = await loadData();
