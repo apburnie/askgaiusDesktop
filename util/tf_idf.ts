@@ -100,6 +100,7 @@ export function sent_to_tf_wordCount_s(sent_s: string[]): {
     const tf = Object.fromEntries(
       Object.entries(wordToCount).map(([stem, count]) => [
         stem,
+        // TF CALC
         count / (count + 1.2 * (0.25 + (0.75 * totalWord) / 20)),
       ]),
     );
@@ -120,6 +121,7 @@ function doc_count_s_to_idf_s(
   const idf = Object.fromEntries(
     Object.entries(doc_word_count).map(([stem, count]) => [
       stem,
+      // IDF CALC
       Math.log((no_of_doc - count + 0.5) / (count + 0.5) + 1),
     ]),
   );
@@ -173,6 +175,7 @@ function calcSentTFIDF_n_docIDF_s(
   const sent_tf_idf_s = sent_tf_wordCount_s.map(({ tf, text, totalWord }) => {
     const tfidf = Object.fromEntries(
       Object.entries(tf).map(([stem, word_tf]) => {
+        //TF IDF CALC
         return [stem, word_tf * doc_idf[stem]!];
       }),
     );

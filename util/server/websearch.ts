@@ -63,5 +63,5 @@ export async function getArticleFromWikipediaAPI({
     snippet + extra_content,
   );
 
-  return { content: getSummary(10) };
+  return { content: getSummary(100) };
 }

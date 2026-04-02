@@ -166,8 +166,6 @@ export async function submitPrompt(data: Data) {
   await buildMemory(data);
   const prompt = data.prompt;
 
-  data.prompt = "";
-
   // Create System Prompt
   const system_content = await buildSystemContent(data);
 
@@ -213,6 +211,7 @@ export async function submitPrompt(data: Data) {
     convert_content: Dompurify.sanitize(parse(thought_result)),
     convert_thought: Dompurify.sanitize(parse(thought)),
   });
+  data.prompt = "";
 
   await buildMemory(data);
   await saveConversation(data);

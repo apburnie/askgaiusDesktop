@@ -31,6 +31,7 @@ async function buildAns({
 }
 
 async function prepForWikipedia(data: Data): Promise<string> {
+  console.log("prompt received", data.prompt);
   const input = prepPromptForWikipedia(data.prompt);
 
   const output = await processPrompt({
@@ -50,7 +51,7 @@ export async function getInternetData(data: Data): Promise<string> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title: wikiTitle, prompt }),
+    body: JSON.stringify({ title: wikiTitle, prompt: data.prompt }),
   });
 
   const { content } = (await saveResp.json()) as { content: string };

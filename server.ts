@@ -8,9 +8,10 @@ import {
 } from "./util/server";
 const app = express();
 const port = 8080;
+
 app.use("/", express.static("./output"));
 
-app.use("/api", express.json());
+app.use("/api", express.json({ limit: "50mb" }));
 
 app.post("/api/save-data", async (req, res) => {
   const { id } = await saveDataAPI(req.body);
