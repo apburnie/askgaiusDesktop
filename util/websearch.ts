@@ -49,7 +49,7 @@ export async function getInternetData(data: Data): Promise<string> {
     body: JSON.stringify({ title: wikiTitle, prompt: data.prompt }),
   });
 
-  const { content } = (await saveResp.json()) as { content: string };
+  const { content } = (await saveResp.json()) as { content: string | null };
 
-  return content;
+  return content ?? "";
 }

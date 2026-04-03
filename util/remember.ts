@@ -10,9 +10,15 @@ export async function buildMemory(data: Data) {
   const text = data.hist.map(({ content }) => content).join(" ");
 
   const tfidf = doc_TFIDF(text);
-  data.brain = tfidf.getSummary(10);
-  data.headerText = tfidf.getSummary(1);
+  data.brain = tfidf.getSummary(10) ?? "";
+  data.headerText = tfidf.getSummary(1) ?? "";
   data.tfidf = tfidf.docTFIDF;
+
+  if (data.brain === "") {
+    console.error(
+      "Something went wrong with summary - it is not related to itself",
+    );
+  }
 }
 
 export async function saveConversation(data: Data) {

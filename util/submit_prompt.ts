@@ -17,7 +17,7 @@ export function summariseContent(prompt?: string): string {
   let summary = "";
   if (prompt.length > PROMPT_WINDOW) {
     const tfidf = doc_TFIDF(prompt);
-    summary = tfidf.getSummary(100);
+    summary = tfidf.getSummary(100) ?? "";
   }
 
   let input = "";
