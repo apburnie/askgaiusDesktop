@@ -129,12 +129,11 @@ function doc_count_s_to_idf_s(
   );
 }
 
-// AM HERE IN CHECKTHROUGH
-
 export function findClosestStringToQuery(query: string, text: string) {
   const { sent_tf_idf_s } = calcSentTFIDF_n_docIDF_s(text, false, query);
 
   const queryTFIDF = sent_tf_idf_s.find(({ text }) => text.includes(query))!;
+  // If the text contains a sentence that matches the query exactly - this is not useful information
   const excl_sent_tfidf_s = sent_tf_idf_s.filter(
     ({ text }) => !text.includes(query),
   );
@@ -157,12 +156,13 @@ function calcSentTFIDF_n_docIDF_s(
   // Break text up into sentences
   let sent_s = para_to_sent_s(text, min_string_len);
 
+  // Each sentence is unique
+  sent_s = Array.from(new Set(sent_s));
+
+  // Query placed at the start of the sentence_s
   if (isol_text) {
     sent_s.unshift(isol_text);
   }
-
-  // Each sentence is unique
-  sent_s = Array.from(new Set(sent_s));
 
   const no_of_doc = sent_s.length;
 
@@ -204,6 +204,8 @@ function calcDocAveTFIDF(sent_tf_idf_s: { tfidf: Record<string, number> }[]) {
   return doc_baseline;
 }
 
+// AM HERE
+
 function calcClosest({
   sent_tf_idf_s,
   comparison,
@@ -215,8 +217,14 @@ function calcClosest({
   }[];
   comparison: Record<string, number>;
 }) {
+  let max_cs = -2;
+
   const sent_score_s = sent_tf_idf_s.map(({ text, tfidf, totalWord }) => {
     const score = cosineSimilarity(tfidf, comparison);
+
+    if (score > max_cs) {
+      max_cs = score;
+    }
 
     return {
       text,
@@ -225,7 +233,12 @@ function calcClosest({
     };
   });
 
-  function getSummary(budget: number) {
+  function getSummary(budget: number): string | null {
+    if (max_cs <= 0) {
+      // If none of sentences are related to comparison, return null
+      return null;
+    }
+
     const sort_scores = sent_score_s.sort((a, b) => b.score - a.score);
 
     let summary = "";
@@ -247,7 +260,7 @@ function calcClosest({
 }
 
 export function doc_TFIDF(text: string): {
-  getSummary: (value: number) => string;
+  getSummary: (value: number) => string | null;
   docTFIDF: Record<string, number>;
 } {
   const { sent_tf_idf_s } = calcSentTFIDF_n_docIDF_s(text, true);
