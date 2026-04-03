@@ -160,11 +160,11 @@ export async function processPrompt({
   const output = await engine.chat.completions.create({
     messages,
     stream: true,
-    repetition_penalty: 1.2,
-    temperature: 0.5,
+    temperature: 1,
     top_p: 0.95,
     stream_options: { include_usage: true },
-    enable_thinking: false,
+    max_tokens: 32768,
+    presence_penalty: 0.2,
   });
 
   return output;
