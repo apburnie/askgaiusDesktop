@@ -10,7 +10,7 @@ export default function SendPrompt() {
               ${gta}
               <system-prompt-mode x-show="systemPromptMode === 'PROMPT_TRAINER'">
                 <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}", attr: { style: "height:100%" } })}</div>
-                <div>🎓 Prompt Trainer</div>
+                <div>🎓 Score Prompt from 1 (worst) to 5 (best)</div>
                </system-prompt-mode>
                <system-prompt-mode x-show="systemPromptMode === 'GOLDFISH'">
                  <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}", attr: { style: "height:100%" } })}</div>

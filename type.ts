@@ -74,3 +74,5 @@ export interface SaveDataSet {
   latestID: number;
   conversationS: StoredSaveDataItem[];
 }
+
+export type SystemPromptType = "BASE" | "PROMPT_TRAINER";

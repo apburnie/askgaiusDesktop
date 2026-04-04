@@ -1,9 +1,9 @@
 import { parse } from "marked";
 import Dompurify from "dompurify";
 
-import { type Data, type MessageS } from "../type";
+import { type Data, type MessageS, type SystemPromptType } from "../type";
 import { doc_TFIDF } from "./tf_idf";
-import { SYSTEM_PROMPT } from "./system_prompt";
+import { storeToString } from "./system_prompt";
 import { MODEL_PATH, PROMPT_WINDOW } from "../constant";
 import { buildMemory, getClosestSummary, saveConversation } from "./remember";
 import { getInternetData } from "./websearch";
@@ -37,9 +37,8 @@ async function buildSystemContent(data: Data): Promise<string> {
     currentID: id,
     tfidf,
   } = data;
-  console.log("SPM", systemPromptMode);
 
-  let mode: keyof typeof SYSTEM_PROMPT = "BASE";
+  let mode: SystemPromptType = "BASE";
 
   if (["GOLDFISH", "BASE", "WEBSEARCH"].includes(systemPromptMode)) {
     mode = "BASE";
@@ -47,7 +46,7 @@ async function buildSystemContent(data: Data): Promise<string> {
     mode = systemPromptMode as "PROMPT_TRAINER";
   }
 
-  const system_content = [SYSTEM_PROMPT[mode]];
+  const system_content = [storeToString(mode)];
 
   if (systemPromptMode === "PROMPT_TRAINER") {
     system_content.push(`
@@ -165,6 +164,7 @@ export async function processPrompt({
     stream_options: { include_usage: true },
     max_tokens: 32768,
     presence_penalty: 0.2,
+    frequency_penalty: 0,
   });
 
   return output;
