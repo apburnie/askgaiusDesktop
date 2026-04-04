@@ -200,8 +200,9 @@ export async function submitPrompt(data: Data) {
 
   const messages: MessageS = [first_hist, user_prompt];
 
-  console.log("SYSTEM CONTENT", messages[0].content);
-  console.log("USER CONTENT", messages[1].content);
+  // Uncomment to see what messages are being processed:
+  //console.log("SYSTEM CONTENT", messages[0].content);
+  //console.log("USER CONTENT", messages[1].content);
 
   if (data.killStream) {
     data.killStream = false;
