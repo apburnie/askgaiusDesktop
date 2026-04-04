@@ -22,7 +22,7 @@
   },
   "private": true,
   "scripts": {
-    "build:browser": "rm output/odin/index-* && rm output/odin/index.html && bun build ./index.html --minify --target=browser --outdir output/odin",
+    "build:browser": "rm -f output/odin/index-* && rm output/odin/index.html && bun build ./index.html --minify --target=browser --outdir output/odin",
     "dev": "bun run build:browser && MODE=dev bun run server.ts",
     "build:linux:x64": "bun build ./server.ts --compile --minify --bytecode --target=bun-linux-x64-modern --outfile output/exe/askGaius-linux-x64",
     "build:linux:arm64": "bun build ./server.ts --compile --minify --bytecode --target=bun-linux-arm64 --outfile output/exe/askGaius-linux-arm64",
