@@ -5,47 +5,57 @@ import {
   deleteDataAPI,
   loadDataAPI,
   saveDataAPI,
+  isAuthorized,
 } from "./util/server";
-const app = express();
-const port = 8080;
 
-if (process.env.MODE === "dev") {
-  app.use("/", express.static("./output/odin"));
-} else {
-  // Production mode
-  app.use("/", express.static("../odin"));
-}
+isAuthorized().then((IS_AUTH) => {
+  if (process.env.MODE === "dev" || IS_AUTH) {
+    const app = express();
+    const port = 8080;
 
-app.use("/api", express.json({ limit: "50mb" }));
+    if (process.env.MODE === "dev") {
+      app.use("/", express.static("./output/odin"));
+    } else {
+      // Production mode
+      app.use("/", express.static("../odin"));
+    }
 
-app.post("/api/save-data", async (req, res) => {
-  const { id } = await saveDataAPI(req.body);
+    app.use("/api", express.json({ limit: "50mb" }));
 
-  return res.json({ id });
-});
+    app.post("/api/save-data", async (req, res) => {
+      const { id } = await saveDataAPI(req.body);
 
-app.get("/api/load-data", async (_, res) => {
-  const data = await loadDataAPI();
+      return res.json({ id });
+    });
 
-  return res.json(data);
-});
+    app.get("/api/load-data", async (_, res) => {
+      const data = await loadDataAPI();
 
-app.post("/api/delete-data", async (req, res) => {
-  const respJSON = await deleteDataAPI(req.body);
+      return res.json(data);
+    });
 
-  return res.json(respJSON);
-});
+    app.post("/api/delete-data", async (req, res) => {
+      const respJSON = await deleteDataAPI(req.body);
 
-app.post("/api/load-closest", async (req, res) => {
-  const respJSON = await loadClosestSummary(req.body);
-  return res.json(respJSON);
-});
+      return res.json(respJSON);
+    });
 
-app.post("/api/ask-wikipedia", async (req, res) => {
-  const respJSON = await getArticleFromWikipediaAPI(req.body);
-  return res.json(respJSON);
-});
+    app.post("/api/load-closest", async (req, res) => {
+      const respJSON = await loadClosestSummary(req.body);
+      return res.json(respJSON);
+    });
 
-app.listen(port, () => {
-  console.log(`Open the browser at http://localhost:${port}`);
+    app.post("/api/ask-wikipedia", async (req, res) => {
+      const respJSON = await getArticleFromWikipediaAPI(req.body);
+      return res.json(respJSON);
+    });
+
+    app.listen(port, () => {
+      console.log(`Open the browser at http://localhost:${port}`);
+    });
+  } else {
+    console.error(
+      "You are only permitted to run AskGaius on the storage medium it was provided on",
+    );
+  }
 });
