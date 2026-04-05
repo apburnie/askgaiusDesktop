@@ -77,21 +77,18 @@ async function getHardwareSignature(): Promise<string> {
   return "ERROR";
 }
 export async function isAuthorized() {
-  // Hardcoded signatures for your specific USB across platforms
-  //
-  // Hashed sigs
   const AUTHORIZED_SIGS: [string, string] = [
-    "66E1-5D6F",
-    "CFCA7BC3-355C-33E4-B7CA-6F9F6096E1EE",
+    "$argon2id$v=19$m=65536,t=2,p=1$pFIN2vivVsBEFAY6MD5TUUbpsvglrtrZYEm7hjyVeSc$XXtM7OpRBPSy3VSZIgz065wYtRr70J/NmC8C0zv/Z8M",
+    "$argon2id$v=19$m=65536,t=2,p=1$W5j2TYzxYjiy/YzDFyI1xkndin51PVN/Hlu91oRDx+c$elQdBhPqIyWAchJU6PSAS8gXnLULztpFSZ1z/xp6xsU",
   ];
 
   const currentSig = await getHardwareSignature();
 
-  const chk1 = currentSig === AUTHORIZED_SIGS[0];
+  const chk1 = await Bun.password.verify(currentSig, AUTHORIZED_SIGS[0]);
 
   if (chk1) return true;
 
-  const chk2 = currentSig === AUTHORIZED_SIGS[1];
+  const chk2 = await Bun.password.verify(currentSig, AUTHORIZED_SIGS[1]);
 
   if (chk2) return true;
 
