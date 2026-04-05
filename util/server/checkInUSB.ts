@@ -1,66 +1,97 @@
-import { spawnSync } from "node:child_process";
 import { platform } from "node:os";
 
-function getHardwareSignature() {
+async function runCommand(command: string[]): Promise<string> {
+  const proc = Bun.spawn(command);
+  const procOutput = await new Response(proc.stdout).text();
+  return procOutput;
+}
+
+async function linuxCheck() {
+  try {
+    // Get device path from current directory
+    const dfProc = await runCommand(["df", "--output=source", "."]);
+
+    const df = dfProc.split("\n")[1]?.trim();
+
+    if (df === undefined) return "ERROR";
+
+    // Get UUID and Vendor info
+    const lsblkProc = await runCommand(["lsblk", "-no", "UUID,VENDOR", df]);
+
+    return lsblkProc.trim().replace(/\s+/g, "-");
+  } catch (e) {
+    return "ERROR";
+  }
+}
+
+async function darwinCheck() {
+  try {
+    // macOS: Extract Volume UUID and Media Name
+    const dfProc = await runCommand(["df", "."]);
+
+    const lines = dfProc.split("\n");
+    const df = lines[1]?.split(/s+/)[0];
+    if (!df) return "ERROR";
+
+    const info = await runCommand(["diskutil", "info", df]);
+
+    const uuid = info.match(/Volume UUID:\s+(.+)/)?.[1]?.trim();
+    return uuid ? uuid.replace(/\s+/g, "-") : "ERROR";
+  } catch (e) {
+    return "ERROR";
+  }
+}
+
+async function windowsCheck() {
+  try {
+    // Windows: Get Volume Serial Number
+    const driveLetter = process.cwd().substring(0, 2);
+    const info = await runCommand(["cmd", "/c", `vol ${driveLetter}`]);
+
+    const match = info.match(/Serial Number is (.+)/);
+    return match?.[1] ? match[1].trim() : "ERROR";
+  } catch (e) {
+    return "ERROR";
+  }
+}
+
+async function getHardwareSignature(): Promise<string> {
   const os = platform();
 
   try {
     if (os === "linux") {
-      // Get device path from current directory
-      const df = spawnSync("df", ["--output=source", "."])
-        .stdout.toString()
-        .split("\n")[1]
-        .trim();
-      // Get UUID and Vendor info
-      const info = spawnSync("lsblk", ["-no", "UUID,VENDOR", df])
-        .stdout.toString()
-        .trim();
-      return info.replace(/\s+/g, "-");
+      return await linuxCheck();
     }
 
     if (os === "darwin") {
-      // macOS: Extract Volume UUID and Media Name
-      const df = spawnSync("df", ["."])
-        .stdout.toString()
-        .split("\n")[1]
-        .split(/\s+/)[0];
-
-      const info = spawnSync("diskutil", ["info", df]).stdout.toString();
-
-      const uuid = info.match(/Volume UUID:\s+(.+)/)?.[1].trim();
-      return uuid.replace(/\s+/g, "-");
+      return await darwinCheck();
     }
 
     if (os === "win32") {
-      // Windows: Get Volume Serial Number
-      const driveLetter = process.cwd().substring(0, 2);
-      const info = spawnSync("cmd", [
-        "/c",
-        `vol ${driveLetter}`,
-      ]).stdout.toString();
-      const match = info.match(/Serial Number is (.+)/);
-      return match[1].trim();
+      return await windowsCheck();
     }
   } catch (e) {
-    return "error";
+    return "ERROR";
   }
+
+  return "ERROR";
 }
 export async function isAuthorized() {
   // Hardcoded signatures for your specific USB across platforms
   //
   // Hashed sigs
-  const AUTHORIZED_SIGS = [
-    "$argon2id$v=19$m=65536,t=2,p=1$X8QO+w/kzB1zVvrMaykQZh6ikVR8bfCgWrnLiXS1Rjo$hbDBzbcV2A//9hzxewlrKhkpmWsU4zBMz5YYf6Kud0g",
-    "$argon2id$v=19$m=65536,t=2,p=1$HtRokATKAXTSfdyuCo8wxL/5/c5XofCcK2YFbCpZwCg$KZZYoz7Kkvp1s8whErKPqDHwU+V9jIPJcU8K6RAa964",
+  const AUTHORIZED_SIGS: [string, string] = [
+    "66E1-5D6F",
+    "CFCA7BC3-355C-33E4-B7CA-6F9F6096E1EE",
   ];
 
-  const currentSig = getHardwareSignature();
+  const currentSig = await getHardwareSignature();
 
-  const chk1 = await Bun.password.verify(currentSig, AUTHORIZED_SIGS[0]);
+  const chk1 = currentSig === AUTHORIZED_SIGS[0];
 
   if (chk1) return true;
 
-  const chk2 = await Bun.password.verify(currentSig, AUTHORIZED_SIGS[1]);
+  const chk2 = currentSig === AUTHORIZED_SIGS[1];
 
   if (chk2) return true;
 
