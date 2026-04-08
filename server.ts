@@ -15,10 +15,10 @@ isAuthorized().then((IS_AUTH) => {
     const port = 8080;
 
     if (process.env.MODE === "dev") {
-      app.use("/", express.static("./output/odin"));
+      app.use("/", express.static("./output/minerva"));
     } else {
       // Production mode
-      app.use("/", express.static("../odin"));
+      app.use("/", express.static("../minerva"));
     }
 
     app.use("/api", express.json({ limit: "50mb" }));
