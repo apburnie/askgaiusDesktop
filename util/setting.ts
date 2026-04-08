@@ -22,3 +22,8 @@ export async function goToHomePage(data: Data) {
   data.headerText = "Welcome to AskGaius";
   data.page = "HOME";
 }
+
+export async function clearSpecialMode(data: Data) {
+  data.systemPromptMode = "BASE";
+  data.converseSubPage = "CONVERSE";
+}
