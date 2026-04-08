@@ -1,7 +1,7 @@
 const content = [
   "# Specifications",
   "",
-  "Product: AskGaius Mercury 0.01",
+  "Product: AskGaius 0.01",
   `Creation Date: ${new Date().toUTCString()}`,
   "",
   "",
