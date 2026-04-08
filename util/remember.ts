@@ -71,7 +71,14 @@ export async function loadConversation_s(data: Data) {
   });
 
   const loadJSON = (await saveResp.json()) as { data: StoredSaveDataItem[] };
-  data.loadMeta = loadJSON.data;
+
+  const latestFirst: StoredSaveDataItem[] = [];
+
+  loadJSON.data.forEach((saveItem) => {
+    latestFirst.unshift(saveItem);
+  });
+
+  data.loadMeta = latestFirst;
 }
 
 export async function loadByID(
