@@ -12,7 +12,7 @@ function getHardwareSignature() {
         .split("\n")[1]
         .trim();
       // Get UUID and Vendor info
-      const info = spawnSync("lsblk", ["-no", "UUID,VENDOR", df])
+      const info = spawnSync("lsblk", ["-no", "UUID", df])
         .stdout.toString()
         .trim();
       return info.replace(/\s+/g, "-");
