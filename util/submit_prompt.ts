@@ -100,6 +100,8 @@ export async function outputToAns(
   for await (const chunk of output) {
     data.runAns += chunk.choices[0]?.delta.content || "";
 
+    jumpToRunText();
+
     if (data.killStream) {
       data.killStream = false;
       earlyExit = true;
@@ -168,6 +170,13 @@ export async function processPrompt({
   });
 
   return output;
+}
+
+function jumpToRunText() {
+  //Jump to where text being outputted
+  const url = window.location.href;
+  window.location.href = "#runAns";
+  window.history.replaceState(null, null, url);
 }
 
 export async function submitPrompt(data: Data) {

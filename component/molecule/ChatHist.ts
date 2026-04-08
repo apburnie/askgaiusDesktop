@@ -23,7 +23,7 @@ export default function ChatHist() {
 
 
     <gaius-message :class="'assistant'" >
-    <div x-text="runAns"></div>
+    <div x-text="runAns"></div><div id="runAns"></div>
     </gaius-message>
 
   </chat-hist>
