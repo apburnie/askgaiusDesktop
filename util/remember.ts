@@ -1,5 +1,6 @@
 import {
   type Data,
+  type SaveDataSet,
   type SentSaveDataItem,
   type StoredSaveDataItem,
   type TFIDFType,
@@ -79,6 +80,31 @@ export async function loadConversation_s(data: Data) {
   });
 
   data.loadMeta = latestFirst;
+}
+
+export async function downloadBackup(): Promise<null | SaveDataSet> {
+  const backupResp = await fetch("/api/load-backup", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const loadJSON = (await backupResp.json()) as { data: null | SaveDataSet };
+
+  const metaStr =
+    "data:text/json;charset=utf-8," +
+    encodeURIComponent(JSON.stringify(loadJSON.data));
+
+  const aElement = document.createElement("a");
+
+  aElement.setAttribute("href", metaStr);
+  aElement.setAttribute("download", "semper");
+
+  document.body.appendChild(aElement);
+  aElement.click();
+
+  aElement.remove();
 }
 
 export async function loadByID(

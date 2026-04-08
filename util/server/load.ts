@@ -26,3 +26,13 @@ export async function loadDataAPI() {
   const rest = await loadAll();
   return { data: rest };
 }
+
+export async function loadBackupAPI(): Promise<null | SaveDataSet> {
+  const data = await loadData();
+
+  if (data) {
+    return data;
+  } else {
+    return null;
+  }
+}

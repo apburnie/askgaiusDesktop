@@ -6,6 +6,7 @@ import {
   loadDataAPI,
   saveDataAPI,
   isAuthorized,
+  loadBackupAPI,
 } from "./util/server";
 
 isAuthorized().then((IS_AUTH) => {
@@ -32,6 +33,12 @@ isAuthorized().then((IS_AUTH) => {
       const data = await loadDataAPI();
 
       return res.json(data);
+    });
+
+    app.get("/api/load-backup", async (_, res) => {
+      const data = await loadBackupAPI();
+
+      return res.json({ data });
     });
 
     app.post("/api/delete-data", async (req, res) => {

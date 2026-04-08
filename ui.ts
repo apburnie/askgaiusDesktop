@@ -17,6 +17,7 @@ import {
   switchForID,
   parseHTML,
   printHist,
+  downloadBackup,
 } from "./util";
 import { DEFAULT_DATA } from "./constant";
 
@@ -48,6 +49,7 @@ const data: () => Data = () => ({
     activateGoldfish,
     activateWebSearch,
     goToHomePage,
+    downloadBackup,
     getHeaderText: (data: Data, length: number) => {
       const text = data.headerText.replace(/[\s\n]+/g, " ");
 
