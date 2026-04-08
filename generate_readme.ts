@@ -52,6 +52,14 @@ const content = [
   "- If you have Windows and ARM64, click on the executable AskGaius/exe/askGaius-windows-arm64.exe",
   "",
   "- If you have Macos and ARM64, click on the executable AskGaius/exe/askGaius-linux-arm64.exe",
+  "",
+  "",
+  "",
+  "# How to Backup your Conversations",
+  "",
+  "- Click 'Download Backup' on the Home Page",
+  "- This downloads a file called 'semper'",
+  "- Place the 'semper' file in the same directory as the 'README.txt' (the file you are reading currently)",
 ];
 
 await Bun.write("./output/README.txt", content.join("\n"));
