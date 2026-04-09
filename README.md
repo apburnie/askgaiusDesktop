@@ -1,23 +1,43 @@
 # AskGaius
 
+## Working Locally
+
 To install dependencies:
 
 ```bash
 bun install
 ```
 
-To run:
+To run locally:
 
 ```bash
-bun run server.ts
+bun run dev
 ```
 
-To build executables:
+## Building the Product
+
+1. Build the output directory that contains the software for the product:
 
 ```bash
-bun run build:windows:linux
+bun run build
 ```
 
-Executables are stored in the directory `output`. The executables must be run in the same directory as contains the directory `public/model`. The ONNX directory must be stored under `onnx-community/Qwen3.5-4B-ONNX`.
+The outputted software is stored in output/
 
-This project was created using `bun init` in bun v1.3.10. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+2. Burn the AskGaius image to the USB:
+
+First get where the USB is plugged in. Run the following with no USB then with to get the path e.g. /dev/sda1
+
+```
+lsblk
+```
+
+Switch to sudo mode and Linux for this to work and then burn the image to the USB. Replace the of value with the correct path:
+
+```
+dd if=askGaius.img of=/dev/sda1 bs=4M status=progress
+```
+
+3. Copy output directory to the USB
+
+4. Rename output to AskGaius
