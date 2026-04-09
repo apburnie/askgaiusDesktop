@@ -11,16 +11,16 @@ OS="$(uname -s)"
 # Detect Architecture
 ARCH="$(uname -m)"
 
-if ["$OS" == "Darwin"]; then
+if [ "$OS" == "Darwin" ]; then
 
-if ["$ARCH" == "arm64"]; then
+if [ "$ARCH" == "arm64" ]; then
         exec "./askGaius-macos-arm64.exe"
     else
         exec "./askGaius-macos-x64.exe"
     fi
 
 else
-    if ["$ARCH" == "arm64"]; then
+    if [ "$ARCH" == "arm64" ]; then
         exec "./askGaius-linux-arm64.exe"
     else
         exec "./askGaius-linux-x64.exe"
