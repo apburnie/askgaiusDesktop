@@ -8,7 +8,7 @@ const content = [
   "",
   "# What is AskGaius?",
   "",
-  "AskGaius provides a Conversational AI Assistant on a memory card. All data is stored on the memory card and processed using the modern browser's WebGPU capabilities.",
+  "AskGaius is a portable AI assistant stored on a plug in and play device that works offline and does not send data to a remote server.",
   "",
   "",
   "",

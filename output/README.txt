@@ -1,13 +1,13 @@
 # Specifications
 
 Product: AskGaius 0.01
-Creation Date: Thu, 09 Apr 2026 10:13:58 GMT
+Creation Date: Thu, 09 Apr 2026 10:16:53 GMT
 
 
 
 # What is AskGaius?
 
-AskGaius provides a Conversational AI Assistant on a memory card. All data is stored on the memory card and processed using the modern browser's WebGPU capabilities.
+AskGaius is a portable AI assistant stored on a plug in and play device that works offline and does not send data to a remote server.
 
 
 
