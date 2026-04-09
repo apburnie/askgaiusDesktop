@@ -15,8 +15,7 @@ out
 dist
 *.tgz
 dist/*
-output/exe/*
-output/minerva/*
+AskGaius/.e/*
 
 # code coverage
 coverage

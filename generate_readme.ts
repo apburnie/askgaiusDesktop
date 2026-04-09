@@ -55,4 +55,4 @@ const content = [
   "- Place the 'semper' file in the same directory as the 'README.txt' (the file you are reading currently)",
 ];
 
-await Bun.write("./output/README.txt", content.join("\n"));
+await Bun.write("./AskGaius/README.txt", content.join("\n"));

@@ -1,7 +1,6 @@
 if /I "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
-    echo Architecture ARM64 detected. Starting up...
 
-    cd /d "exe"
+    cd /d ".e/vulkan"
 
     if exist "askGaius-windows-arm64.exe" (
         askGaius-windows-arm64.exe
@@ -9,7 +8,6 @@ if /I "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
         echo Error: executable not found in the exe folder.
     )
 ) else (
-    echo The system architecture is not ARM64. Starting up...
 
     cd /d "exe"
 

@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# Move to the 'exe' folder relative to this script's location
 # Using -P ensures we resolve any physical paths correctly
 PARENT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
-cd "$PARENT_DIR/exe" || { echo "Failure to enter 'exe' directory"; exit 1; }
+cd "$PARENT_DIR/.e/vulkan" || { echo "Failure to enter directory"; exit 1; }
 
 # Detect Operating System
 OS="$(uname -s)"

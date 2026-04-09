@@ -9,17 +9,14 @@ import {
   loadBackupAPI,
 } from "./util/server";
 
+import { MINERVA_PATH } from "./constant/server";
+
 isAuthorized().then((IS_AUTH) => {
   if (process.env.MODE === "dev" || IS_AUTH) {
     const app = express();
     const port = 8080;
 
-    if (process.env.MODE === "dev") {
-      app.use("/", express.static("./output/minerva"));
-    } else {
-      // Production mode
-      app.use("/", express.static("../minerva"));
-    }
+    app.use("/", express.static(MINERVA_PATH));
 
     app.use("/api", express.json({ limit: "50mb" }));
 
