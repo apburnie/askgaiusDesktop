@@ -15,7 +15,8 @@ out
 dist
 *.tgz
 dist/*
-output/*
+output/exe/*
+output/minerva/*
 
 # code coverage
 coverage
