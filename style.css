@@ -1,33 +1,37 @@
 @font-face {
     font-family: "Atkinson Hyperlegible Next";
-    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Next/AtkinsonHyperlegibleNext-VariableFont_wght.ttf");
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Next/AtkinsonHyperlegibleNext-VariableFont_wght.ttf")
+        format("truetype");
     font-weight: 100 900;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Atkinson Hyperlegible Next";
-    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Next/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.ttf");
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Next/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.ttf")
+        format("truetype");
     font-weight: 100 900;
     font-style: italic;
 }
 
 @font-face {
     font-family: "Atkinson Hyperlegible Mono";
-    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf");
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf")
+        format("truetype");
     font-weight: 100 900;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Atkinson Hyperlegible Mono";
-    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-Italic-VariableFont_wght.ttf");
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-Italic-VariableFont_wght.ttf")
+        format("truetype");
     font-weight: 100 900;
     font-style: italic;
 }
 
 :root {
-    font-family: "Atkinson Hyperlegible", sans-serif;
+    font-family: "Atkinson Hyperlegible Next", sans-serif;
     line-height: 1.5;
     font-weight: 400;
     box-sizing: border-box;
@@ -250,7 +254,7 @@ gaius-text-area {
 gaius-text-area > textarea {
     box-sizing: border-box;
     font-size: 1.5rem;
-    font-family: Arial, sans-serif;
+    font-family: "Atkinson Hyperlegible Next", sans-serif;
     border: 3px solid var(--gaius-light-grey-2);
     background: var(--gaius-light-grey);
     color: var(--gaius-dark-grey);
@@ -323,4 +327,9 @@ load-option {
 
 input[type="file"] {
     display: none;
+}
+
+a {
+    color: var(--gaius-link-blue-2);
+    font-weight: 700;
 }

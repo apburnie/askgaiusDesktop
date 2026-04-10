@@ -19,7 +19,7 @@ export async function printHist(data: Data) {
     <style>
     user-content, ai-content {
     display: block;
-    font-family: Arial, sans-serif;
+    font-family: Georgia, sans-serif;
     }
     user-content {
     border: 2px solid black;
