@@ -19,6 +19,7 @@ import {
   printHist,
   downloadBackup,
   clearSpecialMode,
+  parseSemper,
 } from "./util";
 import { DEFAULT_DATA } from "./constant";
 
@@ -48,6 +49,7 @@ const data: () => Data = () => ({
     deleteByID,
     printHist,
     parseHTML,
+    parseSemper,
     activateGoldfish,
     activateWebSearch,
     goToHomePage,

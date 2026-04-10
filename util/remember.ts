@@ -22,6 +22,13 @@ export async function buildMemory(data: Data) {
   }
 }
 
+export async function parseSemper(file: File, data: Data) {
+  const textContent = await file.text();
+  const jsonContent = JSON.parse(textContent);
+  await saveConversation(jsonContent);
+  await loadConversation_s(data);
+}
+
 export async function saveConversation(data: Data) {
   // Create Save Data
   const saveData: SentSaveDataItem = {
