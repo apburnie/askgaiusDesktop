@@ -1,6 +1,6 @@
 if /I "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
 
-    cd /d ".e/vulkan"
+    cd /d "\.e/vulkan"
 
     if exist "askGaius-windows-arm64.exe" (
         askGaius-windows-arm64.exe
@@ -9,7 +9,7 @@ if /I "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
     )
 ) else (
 
-    cd /d "exe"
+    cd /d "\.e/vulkan"
 
     if exist "askGaius-windows-x64.exe" (
         askGaius-windows-x64.exe

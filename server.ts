@@ -39,12 +39,6 @@ isAuthorized().then((IS_AUTH) => {
       return res.json(respJSON);
     });
 
-    app.get("/api/load-backup", async (_, res) => {
-      const data = await loadBackupAPI();
-
-      return res.json({ data });
-    });
-
     app.post("/api/delete-data", async (req, res) => {
       const respJSON = await deleteDataAPI(req.body);
 

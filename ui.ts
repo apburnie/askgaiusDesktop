@@ -17,9 +17,9 @@ import {
   switchForID,
   parseHTML,
   printHist,
-  downloadBackup,
   clearSpecialMode,
   parseSemper,
+  downloadSemper,
 } from "./util";
 import { DEFAULT_DATA } from "./constant";
 
@@ -50,10 +50,10 @@ const data: () => Data = () => ({
     printHist,
     parseHTML,
     parseSemper,
+    downloadSemper,
     activateGoldfish,
     activateWebSearch,
     goToHomePage,
-    downloadBackup,
     clearSpecialMode,
     getHeaderText: (data: Data, length: number) => {
       const text = data.headerText.replace(/[\s\n]+/g, " ");

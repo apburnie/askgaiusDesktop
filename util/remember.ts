@@ -1,7 +1,7 @@
 import {
   type ConversationSummary,
   type Data,
-  type SaveDataSet,
+  type HistType,
   type SentSaveDataItem,
   type StoredSaveDataItem,
   type TFIDFType,
@@ -23,14 +23,13 @@ export async function buildMemory(data: Data) {
   }
 }
 
-export async function parseSemper(file: File, data: Data) {
-  const textContent = await file.text();
-  const jsonContent = JSON.parse(textContent);
-  await saveConversation(jsonContent);
-  await loadConversation_s(data);
-}
-
-export async function saveConversation(data: Data) {
+export async function saveConversation(data: {
+  currentID: number;
+  hist: HistType;
+  headerText: string;
+  brain: string;
+  tfidf: TFIDFType;
+}) {
   // Create Save Data
   const saveData: SentSaveDataItem = {
     currentID: data.currentID,
@@ -88,31 +87,6 @@ export async function loadConversation_s(data: Data) {
   });
 
   data.loadMeta = latestFirst;
-}
-
-export async function downloadBackup(): Promise<null | SaveDataSet> {
-  const backupResp = await fetch("/api/load-backup", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const loadJSON = (await backupResp.json()) as { data: null | SaveDataSet };
-
-  const metaStr =
-    "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(loadJSON.data));
-
-  const aElement = document.createElement("a");
-
-  aElement.setAttribute("href", metaStr);
-  aElement.setAttribute("download", "semper");
-
-  document.body.appendChild(aElement);
-  aElement.click();
-
-  aElement.remove();
 }
 
 export async function loadByID(
