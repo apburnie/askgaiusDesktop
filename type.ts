@@ -42,6 +42,7 @@ interface UIData {
   runAns: string | null;
   killStream: boolean;
   processText: string;
+  errorMessage: string | null;
 }
 
 interface CacheData {

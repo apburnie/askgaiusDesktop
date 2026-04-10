@@ -73,11 +73,18 @@ async function buildSystemContent(data: Data): Promise<string> {
     }
 
     if (systemPromptMode === "WEBSEARCH") {
-      data.processText = "Preparing Web Search...";
-      const wikiText = await getInternetData(data);
-      if (wikiText.trim() !== "") {
-        system_content.push("Here is some data on the topic from Wikipedia:\n");
-        system_content.push(wikiText + "\n");
+      if (!window.navigator.onLine) {
+        data.errorMessage =
+          "No Internet Connection - reverting to offline search";
+      } else {
+        data.processText = "Preparing Web Search...";
+        const wikiText = await getInternetData(data);
+        if (wikiText.trim() !== "") {
+          system_content.push(
+            "Here is some data on the topic from Wikipedia:\n",
+          );
+          system_content.push(wikiText + "\n");
+        }
       }
     }
 
@@ -181,6 +188,7 @@ function jumpToRunText() {
 
 export async function submitPrompt(data: Data) {
   data.modelStatus = "PROCESSING";
+  data.errorMessage = null;
   const user_content = summariseContent(data.prompt);
 
   // Update history for user prompt
@@ -225,7 +233,7 @@ export async function submitPrompt(data: Data) {
     output = await processPrompt({ messages, data });
   } catch (error) {
     console.error(error);
-    data.processText = "Text Processing Failed";
+    data.errorMessage = "Fail - please upgrade browser or computer";
     data.modelStatus = "LOADED";
     data.hist.pop();
     return;

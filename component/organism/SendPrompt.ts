@@ -20,7 +20,7 @@ export default function SendPrompt() {
                   <div>${GaiusButton({ colour: "blue", text: "&#xd7;", func: "() => {$data.systemPromptMode = 'BASE'}", attr: { style: "height:100%" } })}</div>
                   <div>🌍 Search the Internet</div>
                  </system-prompt-mode>
-            </system-prompt-container>
+                             </system-prompt-container>
             ${aC}
           </send-prompt>
 
@@ -34,6 +34,10 @@ export default function SendPrompt() {
                   <div x-text="processText"></div>
                   </gaius-message>
                   </div>
+                  <system-prompt-mode x-show="errorMessage !== null">
+                    <div style="width:100%; background:var(--gaius-light-red); display: flex; justify-content: center; align-items: center; font-weight: 700; " x-text="errorMessage"></div>
+                   </system-prompt-mode>
+
 
 
           `;
