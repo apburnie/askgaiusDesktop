@@ -19,8 +19,6 @@ async function uploadBackup(semper: SaveDataSet, data: Data) {
   }
 
   for (const conv of new_conversationS) {
-    console.log("saved text", conv.headerText);
-    console.log("saved id", currentID);
     const item = { currentID, ...conv };
     await saveConversation(item);
     currentID++;
