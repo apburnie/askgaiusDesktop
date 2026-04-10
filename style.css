@@ -1,5 +1,33 @@
+@font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Next/AtkinsonHyperlegibleNext-VariableFont_wght.ttf");
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Next/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.ttf");
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Mono";
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-VariableFont_wght.ttf");
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Atkinson Hyperlegible Mono";
+    src: url("./component/asset/fonts/Atkinson_Hyperlegible_Mono/AtkinsonHyperlegibleMono-Italic-VariableFont_wght.ttf");
+    font-weight: 100 900;
+    font-style: italic;
+}
+
 :root {
-    font-family: Arial, sans-serif;
+    font-family: "Atkinson Hyperlegible", sans-serif;
     line-height: 1.5;
     font-weight: 400;
     box-sizing: border-box;
@@ -28,6 +56,10 @@
     --gaius-link-blue-2: #375d76;
 
     --button-transition: 0.3s;
+}
+
+code {
+    font-family: "Atkinson Hyperlegible Mono", monospace;
 }
 
 html,
