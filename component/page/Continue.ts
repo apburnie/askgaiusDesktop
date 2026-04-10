@@ -14,7 +14,9 @@ export default function Continue() {
     </div>
     <section style="display: flex; flex-direction: column; gap: 1rem; padding: 1rem; ">
      <h2 style="margin:0">Synchronise Chat Histories</h2>
-     ${GaiusButton({ colour: "blue", text: "Download Backup of All Conversations", func: "async () => await func_s.downloadSemper($data)" })}
+     <div x-show="loadMeta.length > 0">
+       ${GaiusButton({ colour: "blue", text: "Download Backup of All Conversations", func: "async () => await func_s.downloadSemper($data)" })}
+     </div>
      <div style="width: 100%"; height: 3rem >
       <label style="width: 100%" class="GaiusButton green" for="semperUpload">Upload Backup</label>
       <input id="semperUpload" type="file" @change="func_s.parseSemper($event.target.files[0], $data)">
