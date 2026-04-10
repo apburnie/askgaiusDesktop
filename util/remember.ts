@@ -1,4 +1,5 @@
 import {
+  type ConversationSummary,
   type Data,
   type SaveDataSet,
   type SentSaveDataItem,
@@ -78,9 +79,9 @@ export async function loadConversation_s(data: Data) {
     },
   });
 
-  const loadJSON = (await saveResp.json()) as { data: StoredSaveDataItem[] };
+  const loadJSON = (await saveResp.json()) as { data: ConversationSummary[] };
 
-  const latestFirst: StoredSaveDataItem[] = [];
+  const latestFirst: ConversationSummary[] = [];
 
   loadJSON.data.forEach((saveItem) => {
     latestFirst.unshift(saveItem);
@@ -121,12 +122,26 @@ export async function loadByID(
   return conversationS.find(({ id }) => id === searchID) ?? null;
 }
 
-export async function switchForID(meta: StoredSaveDataItem, data: Data) {
-  data.currentID = meta.id;
-  data.hist = meta.hist;
-  data.headerText = meta.headerText;
-  data.brain = meta.brain;
-  data.tfidf = meta.tfidf;
+export async function switchForID(id: number, data: Data) {
+  const resp = await fetch("/api/load-data-id", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ findID: id }),
+  });
+
+  const respJSON = await resp.json();
+
+  const { data: foundData } = respJSON as {
+    data: StoredSaveDataItem;
+  };
+
+  data.currentID = foundData.id;
+  data.hist = foundData.hist;
+  data.headerText = foundData.headerText;
+  data.brain = foundData.brain;
+  data.tfidf = foundData.tfidf;
   data.page = "CONVERSE";
 }
 

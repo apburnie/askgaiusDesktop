@@ -46,7 +46,7 @@ interface UIData {
 }
 
 interface CacheData {
-  loadMeta: StoredSaveDataItem[];
+  loadMeta: ConversationSummary[];
 }
 
 interface FuncData {
@@ -74,6 +74,12 @@ export interface StoredSaveDataItem extends Omit<
 export interface SaveDataSet {
   latestID: number;
   conversationS: StoredSaveDataItem[];
+}
+
+export interface ConversationSummary {
+  timeAtSave: number;
+  id: number;
+  headerText: string;
 }
 
 export type SystemPromptType = "BASE" | "PROMPT_TRAINER";

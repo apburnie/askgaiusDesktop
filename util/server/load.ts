@@ -22,9 +22,26 @@ export async function loadAll(): Promise<StoredSaveDataItem[]> {
   }
 }
 
-export async function loadDataAPI() {
+export async function loadMetaDataAPI() {
   const rest = await loadAll();
-  return { data: rest };
+
+  // Just get meta
+
+  const data = rest.map(({ id, timeAtSave, headerText }) => ({
+    id,
+    timeAtSave,
+    headerText,
+  }));
+
+  return { data };
+}
+
+export async function loadConversationByIDAPI({ findID }: { findID: number }) {
+  const rest = await loadAll();
+
+  const foundConversation = rest.find(({ id }) => id === findID);
+
+  return { data: foundConversation };
 }
 
 export async function loadBackupAPI(): Promise<null | SaveDataSet> {

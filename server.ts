@@ -3,10 +3,11 @@ import {
   getArticleFromWikipediaAPI,
   loadClosestSummary,
   deleteDataAPI,
-  loadDataAPI,
+  loadMetaDataAPI,
   saveDataAPI,
   isAuthorized,
   loadBackupAPI,
+  loadConversationByIDAPI,
 } from "./util/server";
 
 import { MINERVA_PATH } from "./constant/server";
@@ -27,9 +28,15 @@ isAuthorized().then((IS_AUTH) => {
     });
 
     app.get("/api/load-data", async (_, res) => {
-      const data = await loadDataAPI();
+      const data = await loadMetaDataAPI();
 
       return res.json(data);
+    });
+
+    app.post("/api/load-data-id", async (req, res) => {
+      const respJSON = await loadConversationByIDAPI(req.body);
+
+      return res.json(respJSON);
     });
 
     app.get("/api/load-backup", async (_, res) => {
