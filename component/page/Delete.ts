@@ -6,7 +6,7 @@ export default function Delete() {
   <div style="border-bottom: 2px solid var(--gaius-light-grey-2); min-height: 5rem">
   ${GaiusButton({ colour: "green", text: "🏛️ Home Page", func: "() => {page = 'HOME'; converseSubPage = 'CONVERSE', headerText = 'Welcome to AskGaius';} ", attr: { style: "height:3rem;" } })}
   </div>
-  <div style="display: flex; flex-direction:column; align-items:center;">
+  <div x-show="loadMeta.length > 0"  style="display: flex; flex-direction:column; align-items:center;">
   <div style="height:3rem;">Click on a conversation below to delete it</div>
   <div style="font-weight:700; height:3rem;">Deleting a Conversation Cannot be Undone</div>
   </div>
