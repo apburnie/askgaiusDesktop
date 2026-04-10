@@ -210,16 +210,28 @@ export async function submitPrompt(data: Data) {
   // Create System Prompt
   const system_content = await buildSystemContent(data);
 
-  const first_hist = {
+  const messages: MessageS = [];
+
+  //first include the system content
+  messages.push({
     role: "system",
     content: system_content,
-  };
+  });
 
-  const messages: MessageS = [first_hist, user_prompt];
+  //second include the last assistant's comment (if any)
+  const last_assistant = data.hist.findLast(({ role }) => role === "assistant");
+  if (last_assistant !== undefined) {
+    messages.push({
+      role: last_assistant.role,
+      content: last_assistant.content,
+    });
+  }
+
+  //finally include user prompt
+  messages.push(user_prompt);
 
   // Uncomment to see what messages are being processed:
-  //console.log("SYSTEM CONTENT", messages[0].content);
-  //console.log("USER CONTENT", messages[1].content);
+  console.log("SUBMITTED", messages);
 
   if (data.killStream) {
     data.killStream = false;
