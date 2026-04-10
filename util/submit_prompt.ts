@@ -217,10 +217,19 @@ export async function submitPrompt(data: Data) {
     data.killStream = false;
     data.modelStatus = "LOADED";
     data.hist.pop();
-    return;
   }
 
-  const output = await processPrompt({ messages, data });
+  let output;
+
+  try {
+    output = await processPrompt({ messages, data });
+  } catch (error) {
+    console.error(error);
+    data.processText = "Text Processing Failed";
+    data.modelStatus = "LOADED";
+    data.hist.pop();
+    return;
+  }
 
   const { thought, thought_result, earlyExit } = await outputToAns(
     data,
