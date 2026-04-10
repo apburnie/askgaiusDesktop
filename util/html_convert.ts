@@ -36,9 +36,9 @@ export async function printHist(data: Data) {
   const a = document.createElement("a");
   a.setAttribute(
     "href",
-    "data:text/plain;charset=UTF-8," + encodeURIComponent(html),
+    "data:text/html;charset=UTF-8," + encodeURIComponent(html),
   );
-  a.setAttribute("download", `${data.headerText}.html`);
+  a.setAttribute("download", `AskGaius_${Date.now()}.html`);
   a.click();
 }
 
