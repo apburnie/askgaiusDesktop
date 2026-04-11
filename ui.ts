@@ -37,6 +37,7 @@ const data: () => Data = () => ({
   runAns: null,
   killStream: false,
   processText: "Processing",
+  backupLoading: false,
   errorMessage: null,
   func_s: {
     buildMemory,

@@ -1,4 +1,4 @@
-import { GaiusButton } from "../atom";
+import { GaiusButton, GaiusMessage } from "../atom";
 
 export default function Continue() {
   return `
@@ -19,9 +19,19 @@ export default function Continue() {
      </div>
      <div style="width: 100%"; height: 3rem >
       <label style="width: 100%" class="GaiusButton green" for="semperUpload">Upload Backup</label>
-      <input id="semperUpload" type="file" @change="func_s.parseSemper($event.target.files[0], $data)">
+      <input id="semperUpload" type="file" x-ref="file" @change="func_s.parseSemper($event.target.files[0], $data)">
      </div>
     </section>
+    <backup-loading x-show="backupLoading" style="position:absolute; right:calc(50% - 10rem); top:calc(50% - 3rem); width:20rem; height:3rem; border:2px solid var(--gaius-dark-grey); border-radius:10px; background:var(--gaius-yellow)">
+    <div style="position: absolute;
+    left: calc(50% - 7rem);
+    width: 15rem;
+    height: 1.5rem;
+    top: calc(100% - 2.2rem);
+    font-weight: bold;">
+    Backup Loading - Please Wait
+    </div>
+    </backup-loading>
   </continue-container>
   `;
 }

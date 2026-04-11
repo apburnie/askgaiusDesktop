@@ -43,6 +43,7 @@ interface UIData {
   killStream: boolean;
   processText: string;
   errorMessage: string | null;
+  backupLoading: boolean;
 }
 
 interface CacheData {

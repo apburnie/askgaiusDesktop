@@ -2,7 +2,7 @@ const content = [
   "# Specifications",
   "",
   "Product: AskGaius 0.01",
-  `Creation Date: ${new Date().toUTCString()}`,
+  `Version Build Date: ${new Date().toUTCString()}`,
 ];
 
-await Bun.write("./AskGaius/README.txt", content.join("\n"));
+await Bun.write("./AskGaius/VERSION.txt", content.join("\n"));

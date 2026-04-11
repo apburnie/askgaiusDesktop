@@ -2,10 +2,16 @@ import { type Data, type SaveDataSet, type StoredSaveDataItem } from "../type";
 import { loadConversation_s, saveConversation } from "./remember";
 
 export async function parseSemper(file: File, data: Data) {
+  if (!file) {
+    console.error("No file detected");
+    return;
+  }
+  data.backupLoading = true;
   const textContent = await file.text();
   const jsonContent = JSON.parse(textContent);
   await uploadBackup(jsonContent, data);
   await loadConversation_s(data);
+  data.backupLoading = false;
 }
 
 async function uploadBackup(semper: SaveDataSet, data: Data) {
